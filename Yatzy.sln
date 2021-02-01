@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YatzyLibrary", "YatzyLibrary\YatzyLibrary.csproj", "{C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YatzyConsole", "YatzyConsole\YatzyConsole.csproj", "{2C249CA0-FB3A-42F6-88C2-9025C5BBA2FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF} = {C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3061C5F-4D1A-4DFB-B38B-B0AFB5F85CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C249CA0-FB3A-42F6-88C2-9025C5BBA2FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C249CA0-FB3A-42F6-88C2-9025C5BBA2FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C249CA0-FB3A-42F6-88C2-9025C5BBA2FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C249CA0-FB3A-42F6-88C2-9025C5BBA2FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51920837-96C1-48CE-BDB4-4B5113A043FA}
+	EndGlobalSection
+EndGlobal
