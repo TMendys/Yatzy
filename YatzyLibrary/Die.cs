@@ -4,7 +4,7 @@ using System.Text;
 
 namespace YatzyLibrary
 {
-    public class Dice
+    public class Die
     {
         public int Number { get; set; }
         public static int Roll()

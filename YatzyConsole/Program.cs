@@ -43,10 +43,13 @@ namespace YatzyConsole
             StartGame();
         }
 
-        //The Game-loop
+        /// <summary>
+        /// The game-loop. Creates a set of dice, roll them and print the table.
+        /// </summary>
         private static void StartGame()
         {
-            List<Dice> dices = new List<Dice>();
+            List<Die> dice = new List<Die>();
+            List<Die> chosenDice = new List<Die>();
 
             do
             {
@@ -54,43 +57,121 @@ namespace YatzyConsole
                 {
                     int rollCounter = 0;
 
-                    dices.Clear();
+                    dice.Clear();
+                    chosenDice.Clear();
 
                     //Gör en metod för att skapa valfritt antal tärningar
                     for (int i = 0; i < 5; i++)
                     {
-                        Dice dice = new Dice();
-                        dices.Add(dice);
+                        Die die = new Die();
+                        dice.Add(die);
                     }
 
-                    while (dices.Count > 0 && rollCounter < 3) 
+                    while (dice.Count > 0 && rollCounter < 3) 
                     {
-                        Console.Clear();
-                        DrawTable();
-
-                        Console.WriteLine();
-                        Console.WriteLine();
-                        Console.WriteLine($"Det är {player.Name}s tur.");
-
                         //Gör en egen metod för att slå tärningarna
-                        foreach (Dice dice in dices)
+                        foreach (Die die in dice)
                         {
-                            dice.Number = Dice.Roll();
+                            die.Number = Die.Roll();
                         }
 
                         rollCounter++;
+                        bool validation;
 
-                        foreach (Dice dice in dices)
+                        do
                         {
-                            Console.Write($"{dice.Number}  ");
-                        }
+                            validation = true;
+                            Console.Clear();
+                            DrawTable();
 
-                        Console.WriteLine();
-                        Console.WriteLine("Välj vilka nummer du vill anända, lämna ett mellanrum mellan varje nummer,");
-                        Console.WriteLine("tryck sedan på enter.");
-                        Console.WriteLine("Skriv \"slå\" för att slå tärningarna igen. Du har 3 försök.");
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            Console.WriteLine($"Det är {player.Name}s tur.");
+                            Console.WriteLine();
 
-                        Console.ReadKey();
+                            if (chosenDice.Count > 0)
+                            {
+                                Console.WriteLine("Dina valda tärningar:  ");
+                                foreach (Die die in chosenDice)
+                                {
+                                    Console.Write($"{die.Number}  ");
+                                }
+                                Console.WriteLine();
+                                Console.WriteLine();
+                            }
+
+                            Console.WriteLine("Du slog: ");
+
+                            foreach (Die die in dice)
+                            {
+                                Console.Write($"{die.Number}  ");
+                            }
+
+                            Console.WriteLine();
+
+                            //The player has to chose what dice he wants to use. 
+
+                            Console.WriteLine();
+                            Console.WriteLine("Välj vilka nummer du vill använda, lämna ett mellanrum mellan varje nummer,");
+                            Console.WriteLine("tryck sedan på enter.");
+                            Console.WriteLine("Om du trycker enter utan att välja några nummer kommer tärningarna att slås igen.");
+
+                            string input = Console.ReadLine();
+                            string[] inputNumbersStr;
+                            int[] inputNumbers;
+
+                            if (!string.IsNullOrWhiteSpace(input))
+                            {
+                                inputNumbersStr = input.Split(' ');
+                                inputNumbers = new int[inputNumbersStr.Length];
+                                for (int i = 0; i < inputNumbers.Length; i++)
+                                {
+                                    if(!int.TryParse(inputNumbersStr[i], out inputNumbers[i]))
+                                    {
+                                        validation = false;
+                                        break;
+                                    }
+                                        
+                                }
+
+                                if (validation)
+                                {
+                                    
+
+                                    for (int i = 0; i < inputNumbers.Length; i++)
+                                    {
+                                        validation = false;
+
+                                        foreach (Die die in dice)
+                                        {
+                                            if (die.Number == inputNumbers[i])
+                                            {
+                                                chosenDice.Add(die);
+                                                validation = true;
+                                                dice.Remove(die);
+                                                break;
+                                            }
+                                        }
+
+                                        if (!validation)
+                                        {
+                                            foreach (Die die in chosenDice)
+                                            {
+                                                dice.Add(die);
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+
+
+                            }
+
+
+
+
+
+                        } while (!validation);
                     }
                 }
             } while (true);
