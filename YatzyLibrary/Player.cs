@@ -6,25 +6,16 @@ namespace YatzyLibrary
 {
     public class Player
     {
-        public int[] _scoreTable { get; set; }
+        public int[] ScoreTable { get; set; }
         public string Name { get; set; }
         public int Score { get; set; }
 
+        /// <summary>
+        /// The constructor of the player. It creates a array for the score keeping.
+        /// </summary>
         public Player()
         {
-            _scoreTable = new int[18];
-
-            //Lägg till random data i tabellen
-            //DummyData();
-        }
-
-        private void DummyData()
-        {
-            Random random = new Random();
-            for (int i = 0; i < _scoreTable.Length; i++)
-            {
-                _scoreTable[i] = random.Next(1, 20);
-            }
+            ScoreTable = new int[18];
         }
     }
 }

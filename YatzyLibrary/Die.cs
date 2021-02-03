@@ -6,40 +6,20 @@ namespace YatzyLibrary
 {
     public class Die
     {
+        /// <summary>
+        /// The number the die has.
+        /// </summary>
         public int Number { get; set; }
 
-        public static List<Die> Roll(List<Die> dice)
+        /// <summary>
+        /// Roll a Die to a random number between 1 and 7.
+        /// </summary>
+        /// <param name="dice">A Die object</param>
+        /// <returns>the Die number</returns>
+        public void RollDie()
         {
             Random random = new Random();
-            
-            foreach (Die die in dice)
-            {
-                die.Number = random.Next(1, 7);
-            }
-
-            return dice;
-        }
-
-        public static List<Die> AddDice(List<Die> dice, int numberOfDice)
-        {
-            for (int i = 0; i < numberOfDice; i++)
-            {
-                Die die = new Die();
-                dice.Add(die);
-            }
-            return dice;
-        }
-
-        public static string WriteDiceToString(List<Die> dice)
-        {
-            string diceNumbers = string.Empty;
-
-            foreach (Die die in dice)
-            {
-                diceNumbers += die.Number+" ";
-            }
-
-            return diceNumbers;
+            Number = random.Next(1, 7);
         }
     }
 }

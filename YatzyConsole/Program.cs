@@ -17,7 +17,7 @@ namespace YatzyConsole
 
             StartGame();
         }
-
+        
         private static void NumberOfPlayers()
         {
             bool success;
@@ -66,11 +66,11 @@ namespace YatzyConsole
                     dice.Clear();
                     chosenDice.Clear();
 
-                    dice = Die.AddDice(dice, 5);
+                    DiceController.AddDice(dice, 5);
 
                     while (dice.Count > 0 && rollCounter < 3)
                     {
-                        dice = Die.Roll(dice);
+                        DiceController.Roll(dice);
 
                         rollCounter++;
                         bool validation;
@@ -89,11 +89,11 @@ namespace YatzyConsole
                             if (chosenDice.Count > 0)
                             {
                                 Console.WriteLine("Dina valda tärningar:  ");
-                                Console.WriteLine($"{Die.WriteDiceToString(chosenDice)}{NewLine}");
+                                Console.WriteLine($"{DiceController.WriteDiceToString(chosenDice)}{NewLine}");
                             }
 
                             Console.WriteLine("Du slog: ");
-                            Console.WriteLine($"{Die.WriteDiceToString(dice)}{NewLine}");
+                            Console.WriteLine($"{DiceController.WriteDiceToString(dice)}{NewLine}");
 
                             //The player has to chose what dice he wants to use. 
 
@@ -104,10 +104,10 @@ namespace YatzyConsole
                             if (!string.IsNullOrWhiteSpace(input = Console.ReadLine()))
                             {
                                 validation = inputArrayCreator(input, out inputNumbers);
-                                validation = NumberChecker(inputNumbers, dice);
+                                validation = DiceController.NumberChecker(inputNumbers, dice);
 
                                 if (validation)
-                                    DiceMover(inputNumbers, chosenDice, dice);
+                                    DiceController.DiceMover(inputNumbers, chosenDice, dice);
                             }
                         } while (!validation);
 
@@ -121,7 +121,7 @@ namespace YatzyConsole
                                 Console.WriteLine($"Det är {player.Name}s tur.{NewLine}");
 
                                 Console.WriteLine("Dina valda tärningar:  ");
-                                Console.WriteLine($"{Die.WriteDiceToString(chosenDice)}{NewLine}");
+                                Console.WriteLine($"{DiceController.WriteDiceToString(chosenDice)}{NewLine}");
 
                                 Console.WriteLine("Vill du slå om några av dina valda tärningar?");
                                 Console.WriteLine("Välj vilka nummer du vill använda, lämna ett mellanrum mellan varje nummer,");
@@ -131,10 +131,10 @@ namespace YatzyConsole
                                 if (!string.IsNullOrWhiteSpace(input = Console.ReadLine()))
                                 {
                                     validation = inputArrayCreator(input, out inputNumbers);
-                                    validation = NumberChecker(inputNumbers, chosenDice);
+                                    validation = DiceController.NumberChecker(inputNumbers, chosenDice);
 
                                     if (validation)
-                                        DiceMover(inputNumbers, dice, chosenDice);
+                                        DiceController.DiceMover(inputNumbers, dice, chosenDice);
                                 }
                                 else
                                     validation = true;
@@ -149,54 +149,9 @@ namespace YatzyConsole
             } while (true);
         }
 
-        private static void DiceMover(int[] inputNumbers, List<Die> diceTo, List<Die> diceFrom)
-        {
-            for (int i = 0; i < inputNumbers.Length; i++)
-            {
-                foreach (Die die in diceFrom)
-                {
-                    if (die.Number == inputNumbers[i])
-                    {
-                        diceTo.Add(die);
-                        diceFrom.Remove(die);
-                        break;
-                    }
-                }
-            }
-        }
+        
 
-        /// <summary>
-        /// Checks if the inputed numbers exist in the dice.
-        /// </summary>
-        /// <param name="inputNumbers"></param>
-        /// <param name="dice"></param>
-        /// <returns></returns>
-        private static bool NumberChecker(int[] inputNumbers, List<Die> dice)
-        {
-            List<Die> tempDice = new List<Die>();
-            for (int i = 0; i < inputNumbers.Length; i++)
-            {
-                foreach (Die die in dice)
-                {
-                    if (die.Number == inputNumbers[i])
-                    {
-                        tempDice.Add(die);
-                        dice.Remove(die);
-                        break;
-                    }
-                }
-            }
-
-            foreach (Die die in tempDice)
-            {
-                dice.Add(die);
-            }
-
-            if (inputNumbers.Length == tempDice.Count)
-                return true;
-            else
-                return false;
-        }
+        
 
         private static bool inputArrayCreator(string input, out int[] inputNumbers)
         {
@@ -235,7 +190,6 @@ namespace YatzyConsole
                 }
                 Console.WriteLine();
             }
-
         }
     }
 }

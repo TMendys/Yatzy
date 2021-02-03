@@ -8,18 +8,19 @@ namespace YatzyLibrary
     {
         public static readonly string[] TableNames = {"Ettor      ", "Tvåor      ", "Treor      ", "Fyror      ", "Femmor     ", "Sexor      ", "Summa      ", "Bonus      ",
             "Ett par    ", "Två par    ", "Tretal     ", "Fyrtal     ", "Kåk        ", "Liten stege", "Stor stege ", "Chans      ", "Yatzy      ", "Summa      " };
+        
         public static void InputScore()
         {
 
         }
 
-        public static List<int[]> LoadTable(List<Player> players) 
+        public static List<int[]> LoadTable(List<Player> players)
         {
             List<int[]> scoreTable = new List<int[]>();
 
             foreach (Player player in players)
             {
-                scoreTable.Add(player._scoreTable);
+                scoreTable.Add(player.ScoreTable);
             }
 
             return scoreTable;
