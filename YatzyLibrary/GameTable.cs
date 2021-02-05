@@ -22,7 +22,6 @@ namespace YatzyLibrary
         private static void SumAndBonusChecker(Player player)
         {
             int sum = 0;
-            int sumTemp = 0;
 
             for (int i = 0; i < 6; i++)
             {

@@ -136,7 +136,7 @@ namespace YatzyConsole
                 .Where(g => g.Count() > 1)
                 .ToDictionary(x => x.Key, x => x.Count());
 
-            if (freqMap.Keys.Count > 1)
+            if (freqMap.Count > 1)
             {
                 if (freqMap.Values.Contains(3) && freqMap.Values.Contains(2))
                 {
@@ -162,10 +162,10 @@ namespace YatzyConsole
                 .Where(g => g.Count() > 3)
                 .ToDictionary(x => x.Key, x => x.Count());
 
-            if (freqMap.First().Value > 3)
-            {
+            if (freqMap.Count == 0)
+                return 0;
+            else if (freqMap.First().Value > 3)
                 score = freqMap.First().Key * 4;
-            }
             else
                 return 0;
 
@@ -180,10 +180,10 @@ namespace YatzyConsole
                 .Where(g => g.Count() > 2)
                 .ToDictionary(x => x.Key, x => x.Count());
 
-            if (freqMap.First().Value > 2)
-            {
+            if (freqMap.Count == 0)
+                return 0;
+            else if (freqMap.First().Value > 2)
                 score = freqMap.First().Key * 3;
-            }
             else
                 return 0;
 
@@ -199,7 +199,7 @@ namespace YatzyConsole
                 .Where(g => g.Count() > 1)
                 .ToDictionary(x => x.Key, x => x.Count());
 
-            if (freqMap.Keys.Count > 1)
+            if (freqMap.Count > 1)
             {
                 foreach (var keyValuePair in freqMap)
                 {

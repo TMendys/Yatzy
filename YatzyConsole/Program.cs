@@ -232,7 +232,7 @@ namespace YatzyConsole
             {
                 Console.WriteLine($"{player.Name} {player.Score}");
             }
-            Console.WriteLine($"{NewLine}Vinnaren är{Game.GetWinner(players).Name}");
+            Console.WriteLine($"{NewLine}Vinnaren är {Game.GetWinner(players).Name}");
             Console.ReadKey();
         }
 
