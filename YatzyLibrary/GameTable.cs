@@ -22,23 +22,31 @@ namespace YatzyLibrary
         private static void SumAndBonusChecker(Player player)
         {
             int sum = 0;
+            int sumTemp = 0;
+
             for (int i = 0; i < 6; i++)
             {
                 sum += player.ScoreTable[i];
                 if (player.ScoreTable[i] == -1)
                     sum += 1;
             }
+
             player.ScoreTable[6] = sum;
+
             if(sum > 62)
             {
                 player.ScoreTable[7] = 50;
             }
+            else
+                player.ScoreTable[7] = -1;
+
             for (int i = 7; i < player.ScoreTable.Length-1; i++)
             {
                 sum += player.ScoreTable[i];
                 if (player.ScoreTable[i] == -1)
                     sum += 1;
             }
+
             player.ScoreTable[player.ScoreTable.Length-1] = sum;
         }
 

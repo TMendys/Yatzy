@@ -104,7 +104,7 @@ namespace YatzyConsole
 
                             //The player has to chose what dice he wants to use. 
 
-                            Console.WriteLine("Välj vilka nummer du vill använda, lämna ett mellanrum mellan varje nummer,");
+                            Console.WriteLine("Välj vilka nummer du vill behålla, lämna ett mellanrum mellan varje nummer,");
                             Console.WriteLine("tryck sedan på enter.");
                             Console.WriteLine("Om du trycker enter utan att välja några nummer kommer tärningarna att slås igen.");
 
@@ -122,7 +122,7 @@ namespace YatzyConsole
 
                         do
                         {
-                            if (chosenDice.Count < 5 && rollCounter == 2)
+                            if (rollCounter == 2)
                             {
                                 DrawTable();
                                 Console.WriteLine($"Det är {player.Name}s tur. Slag nummer {rollCounter}.{NewLine}");
@@ -131,9 +131,9 @@ namespace YatzyConsole
                                 Console.WriteLine($"{DiceController.WriteDiceToString(chosenDice)}{NewLine}");
 
                                 Console.WriteLine("Vill du slå om några av dina valda tärningar?");
-                                Console.WriteLine("Välj vilka nummer du vill använda, lämna ett mellanrum mellan varje nummer,");
+                                Console.WriteLine("Välj vilka nummer du vill slå om, lämna ett mellanrum mellan varje nummer,");
                                 Console.WriteLine("tryck sedan på enter.");
-                                Console.WriteLine("Om du trycker enter utan att välja några nummer kommer tärningarna att slås igen.");
+                                Console.WriteLine("Om du trycker enter utan att välja några nummer kommer resterande tärningarna att slås igen.");
 
                                 if (!string.IsNullOrWhiteSpace(input = Console.ReadLine()))
                                 {
@@ -155,7 +155,7 @@ namespace YatzyConsole
 
                         validation = false;
 
-                        while (!validation && rollCounter > 1)
+                        while (!validation)
                         {
                             DrawTable();
                             Console.WriteLine($"Det är {player.Name}s tur. Slag nummer {rollCounter}.{NewLine}");
@@ -169,7 +169,6 @@ namespace YatzyConsole
                             else
                                 Console.WriteLine("Om du är klar så skriv in vilket fält du vill sätta in dina poäng på.");
 
-                            Console.WriteLine("Välj vilka nummer du vill använda, lämna ett mellanrum mellan varje nummer,");
                             Console.WriteLine("tryck sedan på enter.");
 
                             if (rollCounter < 3 && chosenDice.Count != 5)
@@ -234,6 +233,7 @@ namespace YatzyConsole
                 Console.WriteLine($"{player.Name} {player.Score}");
             }
             Console.WriteLine($"{NewLine}Vinnaren är{Game.GetWinner(players).Name}");
+            Console.ReadKey();
         }
 
         
@@ -274,7 +274,12 @@ namespace YatzyConsole
 
                 foreach (int[] table in scoreTable)
                 {
-                    Console.Write($"{table[i]}\t");
+                    if(table[i] == -1)
+                        Console.Write("0\t");
+                    else if(table[i] == 0)
+                        Console.Write("_\t");
+                    else
+                        Console.Write($"{table[i]}\t");
                 }
                 Console.Write(NewLine);
             }
