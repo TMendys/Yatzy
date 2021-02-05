@@ -53,22 +53,35 @@ namespace YatzyConsole
         /// <summary>
         /// Move Dice from one list to an other.
         /// </summary>
-        /// <param name="inputNumbers">What numbers to move.</param>
+        /// <param name="numbers">What numbers to move.</param>
         /// <param name="diceTo">What list to move to.</param>
         /// <param name="diceFrom">What list to move from.</param>
-        public static void DiceMover(int[] inputNumbers, List<Die> diceTo, List<Die> diceFrom)
+        public static void DiceMover(int[] numbers, List<Die> diceTo, List<Die> diceFrom)
         {
-            for (int i = 0; i < inputNumbers.Length; i++)
+            for (int i = 0; i < numbers.Length; i++)
             {
                 foreach (Die die in diceFrom)
                 {
-                    if (die.Number == inputNumbers[i])
+                    if (die.Number == numbers[i])
                     {
                         diceTo.Add(die);
                         diceFrom.Remove(die);
                         break;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Move all Dice from one list to an other.
+        /// </summary>
+        /// <param name="diceTo">What list to move to.</param>
+        /// <param name="diceFrom">What list to move from.</param>
+        public static void DiceMover(List<Die> diceTo, List<Die> diceFrom)
+        {
+            foreach (Die die in diceFrom)
+            {
+                diceTo.Add(die);
             }
         }
 
@@ -103,6 +116,14 @@ namespace YatzyConsole
                 return true;
             else
                 return false;
+        }
+
+        internal static void DiceRemover(List<Die> diceToRemoveFrom, List<Die> diceToRemove)
+        {
+            foreach (Die die in diceToRemove)
+            {
+                diceToRemoveFrom.Remove(die);
+            }
         }
     }
 }

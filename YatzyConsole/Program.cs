@@ -11,11 +11,21 @@ namespace YatzyConsole
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Spela Yatsy!"+NewLine);
+            bool play = true;
 
-            NumberOfPlayers();
+            while (play) {
+                Console.WriteLine("Spela Yatsy!" + NewLine);
 
-            StartGame();
+                NumberOfPlayers();
+
+                StartGame();
+
+                Console.Clear();
+                Console.WriteLine("Vill di spela igen? (J/N)");
+                string input = Console.ReadLine();
+                if (!input.ToUpper().Equals("J"))
+                    play = false;
+            }
         }
         
         private static void NumberOfPlayers()
@@ -44,7 +54,8 @@ namespace YatzyConsole
                 else
                 {
                     success = false;
-                    Console.WriteLine("\nDu måste skriva in ett nummer mellan 2-5\n");
+                    Console.Clear();
+                    Console.WriteLine("Du måste skriva in ett nummer mellan 2-5\n");
                 }
             } while (!success);
         }
@@ -73,18 +84,14 @@ namespace YatzyConsole
                         DiceController.Roll(dice);
 
                         rollCounter++;
-                        bool validation;
+                        bool validation = true;
                         string input;
                         int[] inputNumbers;
 
                         do
                         {
-                            validation = true;
-                            Console.Clear();
                             DrawTable();
-
-                            Console.WriteLine(NewLine);
-                            Console.WriteLine($"Det är {player.Name}s tur.{NewLine}");
+                            Console.WriteLine($"Det är {player.Name}s tur. Slag nummer {rollCounter}.{NewLine}");
 
                             if (chosenDice.Count > 0)
                             {
@@ -103,8 +110,10 @@ namespace YatzyConsole
 
                             if (!string.IsNullOrWhiteSpace(input = Console.ReadLine()))
                             {
-                                validation = inputArrayCreator(input, out inputNumbers);
-                                validation = DiceController.NumberChecker(inputNumbers, dice);
+                                validation = InputArrayCreator(input, out inputNumbers);
+
+                                if (validation)
+                                    validation = DiceController.NumberChecker(inputNumbers, dice);
 
                                 if (validation)
                                     DiceController.DiceMover(inputNumbers, chosenDice, dice);
@@ -113,12 +122,10 @@ namespace YatzyConsole
 
                         do
                         {
-                            if (chosenDice.Count > 0 && rollCounter == 2)
+                            if (chosenDice.Count < 5 && rollCounter == 2)
                             {
-                                Console.Clear();
                                 DrawTable();
-                                Console.WriteLine(NewLine);
-                                Console.WriteLine($"Det är {player.Name}s tur.{NewLine}");
+                                Console.WriteLine($"Det är {player.Name}s tur. Slag nummer {rollCounter}.{NewLine}");
 
                                 Console.WriteLine("Dina valda tärningar:  ");
                                 Console.WriteLine($"{DiceController.WriteDiceToString(chosenDice)}{NewLine}");
@@ -130,30 +137,110 @@ namespace YatzyConsole
 
                                 if (!string.IsNullOrWhiteSpace(input = Console.ReadLine()))
                                 {
-                                    validation = inputArrayCreator(input, out inputNumbers);
-                                    validation = DiceController.NumberChecker(inputNumbers, chosenDice);
+                                    validation = InputArrayCreator(input, out inputNumbers);
+
+                                    if (validation)
+                                        validation = DiceController.NumberChecker(inputNumbers, chosenDice);
 
                                     if (validation)
                                         DiceController.DiceMover(inputNumbers, dice, chosenDice);
                                 }
                                 else
                                     validation = true;
-
                             }
                             else
                                 validation = true;
 
                         } while (!validation);
+
+                        validation = false;
+
+                        while (!validation && rollCounter > 1)
+                        {
+                            DrawTable();
+                            Console.WriteLine($"Det är {player.Name}s tur. Slag nummer {rollCounter}.{NewLine}");
+
+                            Console.WriteLine("Dina tärningar:  ");
+                            
+                            Console.WriteLine($"{DiceController.WriteDiceToString(chosenDice)}{DiceController.WriteDiceToString(dice)}{NewLine}");
+
+                            if(rollCounter == 3 || chosenDice.Count == 5)
+                                Console.WriteLine("Skriv in vilket fält du vill sätta in dina poäng på.");
+                            else
+                                Console.WriteLine("Om du är klar så skriv in vilket fält du vill sätta in dina poäng på.");
+
+                            Console.WriteLine("Välj vilka nummer du vill använda, lämna ett mellanrum mellan varje nummer,");
+                            Console.WriteLine("tryck sedan på enter.");
+
+                            if (rollCounter < 3 && chosenDice.Count != 5)
+                            {
+                                Console.WriteLine("Om du trycker enter utan att välja några nummer kommer tärningarna att slås igen.");
+                                validation = string.IsNullOrWhiteSpace(input = Console.ReadLine());
+                                if (validation)
+                                {
+                                    DiceController.DiceRemover(chosenDice, dice);
+                                    break;
+                                }
+                            }
+                            else
+                                input = Console.ReadLine();
+
+                            validation = int.TryParse(input, out int columnInScoreTable);
+
+                            if (validation &&
+                                columnInScoreTable > 0 &&
+                                columnInScoreTable < 18 &&
+                                columnInScoreTable != 7 &&
+                                columnInScoreTable != 8)
+                            {
+                                DiceController.DiceMover(chosenDice, dice);
+                                int score = ScoreController.CountScore(player, chosenDice, columnInScoreTable, false);
+
+                                if (score == -1)
+                                {
+                                    Console.WriteLine("Du Har redan använt den kolumnen. Välj en annan. Tryck enter för att fortsätta");
+                                    Console.ReadKey();
+                                    validation = false;
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Du får {score} poäng. Vill du fortsätta? (J/N)");
+                                    input = Console.ReadLine();
+                                    if (input.ToUpper().Equals("J"))
+                                    {
+                                        ScoreController.CountScore(player, chosenDice, columnInScoreTable, true);
+                                        rollCounter = 3;
+                                    }
+                                    else
+                                    {
+                                        DiceController.DiceRemover(chosenDice, dice);
+                                        validation = false;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                DiceController.DiceRemover(chosenDice, dice);
+                                validation = false;
+                            }
+                        }
                     }
                 }
-            } while (true);
+            } while (!Game.EndCondition(players));
+
+            DrawTable();
+            foreach (Player player in players)
+            {
+                Console.WriteLine($"{player.Name} {player.Score}");
+            }
+            Console.WriteLine($"{NewLine}Vinnaren är{Game.GetWinner(players).Name}");
         }
 
         
 
         
 
-        private static bool inputArrayCreator(string input, out int[] inputNumbers)
+        private static bool InputArrayCreator(string input, out int[] inputNumbers)
         {
             string[] inputNumbersStr = input.Split(' ');
             inputNumbers = new int[inputNumbersStr.Length];
@@ -169,6 +256,7 @@ namespace YatzyConsole
 
         private static void DrawTable()
         {
+            Console.Clear();
             List<int[]> scoreTable = GameTable.LoadTable(players);
 
             Console.Write("\t\t");
@@ -188,8 +276,9 @@ namespace YatzyConsole
                 {
                     Console.Write($"{table[i]}\t");
                 }
-                Console.WriteLine();
+                Console.Write(NewLine);
             }
+            Console.Write(NewLine);
         }
     }
 }
