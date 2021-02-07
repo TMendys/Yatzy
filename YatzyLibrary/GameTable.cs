@@ -6,9 +6,18 @@ namespace YatzyLibrary
 {
     public static class GameTable
     {
+        /// <summary>
+        /// All the table names.
+        /// </summary>
         public static readonly string[] TableNames = {"Ettor      ", "Tvåor      ", "Treor      ", "Fyror      ", "Femmor     ", "Sexor      ", "Summa      ", "Bonus      ",
             "Ett par    ", "Två par    ", "Tretal     ", "Fyrtal     ", "Kåk        ", "Liten stege", "Stor stege ", "Chans      ", "Yatzy      ", "Summa      " };
         
+        /// <summary>
+        /// Will put the score into the array (score table).
+        /// </summary>
+        /// <param name="player">The player</param>
+        /// <param name="score">The score</param>
+        /// <param name="column">Where to put the score into the array.</param>
         public static void InputScore(Player player, int score, int column)
         {
             if (score == 0)
@@ -19,6 +28,10 @@ namespace YatzyLibrary
             SumAndBonusChecker(player);
         }
 
+        /// <summary>
+        /// Checks all the sums and if bonus is reach.
+        /// </summary>
+        /// <param name="player">The player</param>
         private static void SumAndBonusChecker(Player player)
         {
             int sum = 0;
@@ -49,6 +62,11 @@ namespace YatzyLibrary
             player.ScoreTable[player.ScoreTable.Length-1] = sum;
         }
 
+        /// <summary>
+        /// Loads the table into an list of arrays.
+        /// </summary>
+        /// <param name="players">All the players</param>
+        /// <returns>A list of arrays containing the score tables of every player.</returns>
         public static List<int[]> LoadTable(List<Player> players)
         {
             List<int[]> scoreTable = new List<int[]>();

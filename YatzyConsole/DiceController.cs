@@ -118,6 +118,11 @@ namespace YatzyConsole
                 return false;
         }
 
+        /// <summary>
+        /// Removes a dice from a list.
+        /// </summary>
+        /// <param name="diceToRemoveFrom">What list to remove from.</param>
+        /// <param name="diceToRemove">What dice to remove.</param>
         internal static void DiceRemover(List<Die> diceToRemoveFrom, List<Die> diceToRemove)
         {
             foreach (Die die in diceToRemove)

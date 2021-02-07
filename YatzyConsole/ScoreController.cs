@@ -6,6 +6,9 @@ using YatzyLibrary;
 
 namespace YatzyConsole
 {
+    /// <summary>
+    /// This class will count the score and send it over to InputScore where it will go into the score table.
+    /// </summary>
     class ScoreController
     {
         internal static int CountScore(Player player, List<Die> dice, int columnInScoreTable, bool setScore)

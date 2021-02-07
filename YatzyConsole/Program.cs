@@ -34,10 +34,11 @@ namespace YatzyConsole
 
             do
             {
-                Console.WriteLine("Ange hur många spelare (2-5):  ");
+                Console.WriteLine("Ange hur många spelare (1-5):  ");
 
                 success = int.TryParse(Console.ReadLine(), out int numberOfPlayers);
 
+                //Adds the number of players.
                 if (numberOfPlayers < 6 && numberOfPlayers > 0)
                 {
                     for (int i = 1; i <= numberOfPlayers; i++)
@@ -79,6 +80,7 @@ namespace YatzyConsole
 
                     DiceController.AddDice(dice, 5);
 
+                    //every player have 3 rolls.
                     while (dice.Count > 0 && rollCounter < 3)
                     {
                         DiceController.Roll(dice);
@@ -120,6 +122,7 @@ namespace YatzyConsole
                             }
                         } while (!validation);
 
+                        //The player can choose to roll his saved dice.
                         do
                         {
                             if (rollCounter == 2)
@@ -155,6 +158,7 @@ namespace YatzyConsole
 
                         validation = false;
 
+                        //At the last roll or if he don't have any more dice the player has to choose what field he wants to use.
                         while (!validation)
                         {
                             DrawTable();
@@ -230,16 +234,18 @@ namespace YatzyConsole
             DrawTable();
             foreach (Player player in players)
             {
-                Console.WriteLine($"{player.Name} {player.Score}");
+                Console.WriteLine($"{player.Name}: {player.Score}");
             }
             Console.WriteLine($"{NewLine}Vinnaren är {Game.GetWinner(players).Name}");
             Console.ReadKey();
         }
 
-        
-
-        
-
+        /// <summary>
+        /// Takes an input, splits it and creates an array. If it succeeds it return true and else false.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="inputNumbers"></param>
+        /// <returns>if the algorithm succeeds it creating an array.</returns>
         private static bool InputArrayCreator(string input, out int[] inputNumbers)
         {
             string[] inputNumbersStr = input.Split(' ');
@@ -254,6 +260,9 @@ namespace YatzyConsole
             return true;
         }
 
+        /// <summary>
+        /// Draws the table to the console.
+        /// </summary>
         private static void DrawTable()
         {
             Console.Clear();
