@@ -8,7 +8,7 @@ namespace YatzyLibrary
     {
         public int[] ScoreTable { get; set; }
         public string Name { get; set; }
-        public int Score { get { return ScoreTable[ScoreTable.Length-1]; } set { Score = ScoreTable[ScoreTable.Length-1]; } }
+        public int Score { get => ScoreTable[ScoreTable.Length-1]; set => Score = ScoreTable[ScoreTable.Length-1]; }
 
         /// <summary>
         /// The constructor of the player. It creates a array for the score keeping.
