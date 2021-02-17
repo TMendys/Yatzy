@@ -29,15 +29,15 @@ namespace YatzyConsole
                 case 4:
                 case 5:
                 case 6:
-                    //One To SixScore
+                    //One To Six Score
                     score = GetScore(frequencyMap,
-                        c => true,
+                        c => c.Keys.Count > 1,
                         f => f.Where(x => x.Key == columnInScoreTable).FirstOrDefault().Value * columnInScoreTable);
                     break;
                 case 9:
                     //One Pair
                     score = GetScore(frequencyMap.Where(x => x.Value > 1).ToDictionary(x => x.Key, x => x.Value),
-                        c => true,
+                        c => c.Keys.Count > 1,
                         f => f.OrderByDescending(x => x.Key).First().Key * 2);
                     break;
                 case 10:
@@ -50,13 +50,13 @@ namespace YatzyConsole
                 case 11:
                     //Three Of A Kind
                     score = GetScore(frequencyMap.Where(x => x.Value > 2).ToDictionary(x => x.Key, x => x.Value),
-                        c => true,
+                        c => c.Keys.Count > 1,
                         f => f.OrderByDescending(x => x.Key).First().Key * 3);
                     break;
                 case 12:
                     //Four Of A Kind
                     score = GetScore(frequencyMap.Where(x => x.Value > 3).ToDictionary(x => x.Key, x => x.Value),
-                        c => true,
+                        c => c.Keys.Count > 1,
                         f => f.OrderByDescending(x => x.Key).First().Key * 4);
                     break;
                 case 13:
@@ -102,9 +102,9 @@ namespace YatzyConsole
             return score;
         }
 
-        private static int GetScore(Dictionary<int, int> diceMap, Func<Dictionary<int, int>, bool> diceController, Func<Dictionary<int, int>, int> f)
+        private static int GetScore(Dictionary<int, int> diceMap, Func<Dictionary<int, int>, bool> diceCondition, Func<Dictionary<int, int>, int> f)
         {
-            if (diceMap.Count != 0 && diceController(diceMap))
+            if (diceMap.Count != 0 && diceCondition(diceMap))
             {
                 return f(diceMap);
             }
