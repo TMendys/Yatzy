@@ -4,6 +4,25 @@ using System.Text;
 
 namespace YatzyLibrary
 {
+    public enum YahtzeeCombination
+    {
+        Ones = 1,
+        Twos = 2,
+        Threes = 3,
+        Fours = 4,
+        Fives = 5,
+        Sixes = 6,
+        OnePair,
+        TwoPair,
+        ThreeOfAKind,
+        FourOfAKind,
+        FullHouse,
+        SmallStraight,
+        LongStraight,
+        Chance,
+        Yatzee
+    }
+
     public static class GameTable
     {
         /// <summary>

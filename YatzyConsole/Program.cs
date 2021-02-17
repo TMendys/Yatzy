@@ -197,7 +197,7 @@ namespace YatzyConsole
                                 columnInScoreTable != 8)
                             {
                                 DiceController.DiceMover(chosenDice, dice);
-                                int score = ScoreController.CountScore(player, chosenDice, columnInScoreTable, false);
+                                int score = ScoreControllerNew.CountScore(player, chosenDice, columnInScoreTable, false);
 
                                 if (score == -1)
                                 {
@@ -211,7 +211,7 @@ namespace YatzyConsole
                                     input = Console.ReadLine();
                                     if (input.ToUpper().Equals("J"))
                                     {
-                                        ScoreController.CountScore(player, chosenDice, columnInScoreTable, true);
+                                        ScoreControllerNew.CountScore(player, chosenDice, columnInScoreTable, true);
                                         rollCounter = 3;
                                     }
                                     else
