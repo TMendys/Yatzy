@@ -6,7 +6,7 @@ namespace YatzyConsole;
 
 public class Game
 {
-    private List<Player> Players { get; set; }
+    private List<Player> Players { get; init; }
 
     public Game(List<Player> players)
     {
@@ -168,7 +168,7 @@ public class Game
                     columnInScoreTable != 7 &&
                     columnInScoreTable != 8)
                 {
-                    int score = ScoreController.CountScore(player, dice, columnInScoreTable, false);
+                    int score = ScoreController.CountScore(player, dice, columnInScoreTable);
 
                     if (score == -1)
                     {
@@ -241,9 +241,9 @@ public class Game
 
             foreach (int[] table in scoreTable)
             {
-                if (table[i] == -1)
+                if (table[i] == 0)
                     Write("0\t");
-                else if (table[i] == 0)
+                else if (table[i] == -1)
                     Write("_\t");
                 else
                     Write($"{table[i]}\t");

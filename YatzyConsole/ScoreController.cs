@@ -4,15 +4,14 @@ namespace YatzyConsole;
 
 static class ScoreController
 {
-    internal static int CountScore(Player player, List<Die> dice, int columnInScoreTable, bool accept)
+    internal static int CountScore(Player player, List<Die> dice, int columnInScoreTable)
     {
         Dictionary<int, int> frequencyMap =
             dice.GroupBy(x => x.Number)
             .ToDictionary(x => x.Key, x => x.Count());
 
-        //var frequencyMap = dice.GroupBy(x => x.Number);
 
-        if (player.ScoreTable[columnInScoreTable - 1] != 0)
+        if (player.ScoreTable[columnInScoreTable - 1] != -1)
         {
             return -1;
         }

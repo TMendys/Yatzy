@@ -13,7 +13,7 @@ public class GameOver
         {
             for (int i = 0; i < player.ScoreTable.Length; i++)
             {
-                if (player.ScoreTable[i] == 0)
+                if (player.ScoreTable[i] == -1)
                 {
                     return false;
                 }
@@ -28,6 +28,15 @@ public class GameOver
     /// </summary>
     /// <param name="players">All players</param>
     /// <returns>The player with highest score.</returns>
-    public static Player GetWinner(IEnumerable<Player> players) =>
-        players.MaxBy(x => x.Score);
+    public static Player GetWinner(IEnumerable<Player> players)
+    {
+        Player? player = players.MaxBy(x => x.Score);
+
+        if (player is null)
+        {
+            return new Player("No Name");
+        }
+
+        return player;
+    }
 }

@@ -17,5 +17,6 @@ public class Player
     {
         Name = name;
         ScoreTable = new int[18];
+        Array.Fill(ScoreTable, -1);
     }
 }

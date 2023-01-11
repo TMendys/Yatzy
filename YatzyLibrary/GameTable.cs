@@ -37,10 +37,7 @@ public static class GameTable
     /// <param name="column">Where to put the score into the array.</param>
     public static void InputScore(Player player, int score, int column)
     {
-        if (score == 0)
-            player.ScoreTable[column] = -1;
-        else
-            player.ScoreTable[column] = score;
+        player.ScoreTable[column] = score;
 
         SumAndBonusChecker(player);
     }
@@ -58,7 +55,9 @@ public static class GameTable
         {
             sum += player.ScoreTable[i];
             if (player.ScoreTable[i] == -1)
-                sum += 1;
+            {
+                sum++;
+            }
         }
 
         player.ScoreTable[6] = sum;
@@ -68,16 +67,18 @@ public static class GameTable
             player.ScoreTable[7] = 50;
         }
         else
-            player.ScoreTable[7] = -1;
+            player.ScoreTable[7] = 0;
 
         for (int i = 7; i < player.ScoreTable.Length - 1; i++)
         {
             sum += player.ScoreTable[i];
             if (player.ScoreTable[i] == -1)
-                sum += 1;
+            {
+                sum++;
+            }
         }
 
-        player.ScoreTable[player.ScoreTable.Length - 1] = sum;
+        player.ScoreTable[^1] = sum;
     }
 
     /// <summary>
@@ -87,7 +88,7 @@ public static class GameTable
     /// <returns>A list of arrays containing the score tables of every player.</returns>
     public static IEnumerable<int[]> LoadTable(IEnumerable<Player> players)
     {
-        List<int[]> scoreTable = new List<int[]>();
+        List<int[]> scoreTable = new();
 
         foreach (Player player in players)
         {
