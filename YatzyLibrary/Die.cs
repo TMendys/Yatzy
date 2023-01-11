@@ -106,14 +106,7 @@ public class Dice : List<Die>
     /// Roll the Dice of this collection. Each die will have a random number between the 
     /// lowestValue and the highestValue. As default that is between 1 and 6.
     /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Die> RollDice()
-    {
-        foreach (var die in this)
-        {
-            yield return die.RollDie();
-        }
-    }
+    public void RollDice() => ForEach(x => x.RollDie());
 
     /// <summary>
     /// Checks if the numbers exist in the dice as a validation.

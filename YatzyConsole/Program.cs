@@ -7,6 +7,7 @@ bool play = true;
 
 while (play)
 {
+    Clear();
     WriteLine("Spela Yatsy!" + NewLine);
     List<Player> players = NumberOfPlayers();
     _ = new Game(players);
@@ -14,7 +15,7 @@ while (play)
     Clear();
     WriteLine("Vill du spela igen? (J/N)");
     ConsoleKeyInfo input = ReadKey();
-    if (input.Key == ConsoleKey.J)
+    if (input.Key != ConsoleKey.J)
         play = false;
 }
 

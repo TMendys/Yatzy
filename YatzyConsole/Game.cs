@@ -6,7 +6,7 @@ namespace YatzyConsole;
 
 public class Game
 {
-    public List<Player> Players { get; set; }
+    private List<Player> Players { get; set; }
 
     public Game(List<Player> players)
     {
@@ -37,33 +37,36 @@ public class Game
     {
         YatzyDice yatzyDice = new();
 
+        void Intro()
+        {
+            DrawTable();
+            WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
+
+            if (yatzyDice.SavedDice.Count > 0)
+            {
+                WriteLine("Dina valda tärningar:  ");
+                WriteLine($"{yatzyDice.SavedDice}{NewLine}");
+            }
+        }
+
         //every player have 3 rolls.
         while (yatzyDice.RolledDice.Count > 0 && yatzyDice.RollCount < 3)
         {
             yatzyDice.Roll();
             string? input;
             int[] inputNumbers;
-            bool validation;
+            bool validation = false;
 
-            do
+            while (!validation && yatzyDice.RollCount != 3)
             {
-                DrawTable();
-                WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
-
-                if (yatzyDice.SavedDice.Count > 0)
-                {
-                    WriteLine("Dina valda tärningar:  ");
-                    WriteLine($"{yatzyDice.SavedDice}{NewLine}");
-                }
+                Intro();
 
                 WriteLine("Du slog: ");
                 WriteLine($"{yatzyDice.RolledDice}{NewLine}");
 
-                //The player has to chose what dice he wants to use. 
-
-                WriteLine("Välj vilka nummer du vill behålla, lämna ett mellanrum mellan varje nummer,");
-                WriteLine("tryck sedan på enter.");
-                WriteLine("Om du trycker enter utan att välja några nummer kommer tärningarna att slås igen.");
+                //The player has to chose what dice he wants to use.
+                WriteLine("Om du önskar behålla några tärningar så välj vilka nummer du vill behålla.");
+                WriteLine("Lämna ett mellanrum mellan varje nummer, tryck sedan på enter.");
 
                 if (!string.IsNullOrWhiteSpace(input = ReadLine()))
                 {
@@ -82,23 +85,18 @@ public class Game
                 {
                     validation = true;
                 }
-            } while (!validation);
+            }
 
             //The player can choose to roll his saved dice.
             do
             {
-                if (yatzyDice.RollCount == 2)
+                if (yatzyDice.RollCount == 2 && yatzyDice.SavedDice.Count != 0)
                 {
-                    DrawTable();
-                    WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
-
-                    WriteLine("Dina valda tärningar:  ");
-                    WriteLine($"{yatzyDice.SavedDice}{NewLine}");
+                    Intro();
 
                     WriteLine("Vill du slå om några av dina valda tärningar?");
                     WriteLine("Välj vilka nummer du vill slå om, lämna ett mellanrum mellan varje nummer,");
                     WriteLine("tryck sedan på enter.");
-                    WriteLine("Om du trycker enter utan att välja några nummer kommer resterande tärningarna att slås igen.");
 
                     if (!string.IsNullOrWhiteSpace(input = ReadLine()))
                     {
@@ -118,13 +116,13 @@ public class Game
                         validation = true;
                     }
                 }
-
+                else
+                {
+                    validation = true;
+                }
             } while (!validation);
 
-            validation = false;
-
-            //At the last roll or if he don't have any more dice the player has to choose what field he wants to use.
-            while (!validation)
+            do
             {
                 Dice dice = new();
                 dice.AddRange(yatzyDice.SavedDice);
@@ -197,7 +195,7 @@ public class Game
                 {
                     validation = false;
                 }
-            }
+            } while (!validation);
         }
     }
 
