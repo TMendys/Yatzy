@@ -7,11 +7,8 @@ bool play = true;
 
 while (play)
 {
-
     Console.WriteLine("Spela Yatsy!" + NewLine);
-
     List<Player> players = NumberOfPlayers();
-
     StartGame(players);
 
     Console.Clear();
@@ -24,38 +21,35 @@ while (play)
 static List<Player> NumberOfPlayers()
 {
     List<Player> players = new();
+    int numberOfPlayers;
     bool success;
 
     do
     {
         Console.WriteLine("Ange hur många spelare (1-5):  ");
+        success = int.TryParse(Console.ReadLine(), out numberOfPlayers);
 
-        success = int.TryParse(Console.ReadLine(), out int numberOfPlayers);
-
-        if (numberOfPlayers < 6 && numberOfPlayers > 0)
+        if (numberOfPlayers > 5 && numberOfPlayers < 1)
         {
-            for (int i = 1; i <= numberOfPlayers; i++)
-            {
-                string? name;
-                do
-                {
-                    Console.Clear();
-                    Console.WriteLine($"Spelare {i} skriv in ditt namn:  ");
-                    name = Console.ReadLine();
-                } while (name == null);
-
-                Player player = new(name);
-
-                players.Add(player);
-            }
-        }
-        else
-        {
-            success = false;
             Console.Clear();
             Console.WriteLine("Du måste skriva in ett nummer mellan 1-5\n");
+            success = false;
         }
     } while (!success);
+
+    for (int i = 1; i <= numberOfPlayers; i++)
+    {
+        string? name;
+        do
+        {
+            Console.Clear();
+            Console.WriteLine($"Spelare {i} skriv in ditt namn:  ");
+            name = Console.ReadLine();
+        } while (name == null);
+
+        Player player = new(name);
+        players.Add(player);
+    }
 
     return players;
 }
