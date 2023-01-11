@@ -6,8 +6,7 @@ public class Player
     public string Name { get; init; }
     public int Score
     {
-        get => ScoreTable[ScoreTable.Length - 1];
-        set => Score = ScoreTable[ScoreTable.Length - 1];
+        get => ScoreTable[^1];
     }
 
     /// <summary>

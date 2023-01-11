@@ -1,115 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using YatzyLibrary;
+﻿using YatzyLibrary;
 
-namespace YatzyConsole
+namespace YatzyConsole;
+
+static class ScoreController
 {
-    static class ScoreController
+    internal static int CountScore(Player player, List<Die> dice, int columnInScoreTable, bool accept)
     {
-        internal static int CountScore(Player player, List<Die> dice, int columnInScoreTable, bool setScore)
+        Dictionary<int, int> frequencyMap =
+            dice.GroupBy(x => x.Number)
+            .ToDictionary(x => x.Key, x => x.Count());
+
+        //var frequencyMap = dice.GroupBy(x => x.Number);
+
+        if (player.ScoreTable[columnInScoreTable - 1] != 0)
         {
-            int score = 0;
+            return -1;
+        }
 
-            Dictionary<int, int> frequencyMap =
-                dice.GroupBy(x => x.Number)
-                .ToDictionary(x => x.Key, x => x.Count());
+        int score = columnInScoreTable switch
+        {
+            //One To Six Score
+            <= 6 when dice.Where(x => x.Number == columnInScoreTable).Any() =>
+                dice.Where(x => x.Number == columnInScoreTable).Count() * columnInScoreTable,
+            //One Pair
+            9 => CountGroups(frequencyMap, 2, 1),
+            //Two Pair
+            10 => CountGroups(frequencyMap, 2, 2),
+            //Three Of A Kind
+            11 => CountGroups(frequencyMap, 3, 1),
+            //Four Of A Kind
+            12 => CountGroups(frequencyMap, 4, 1),
+            //Full House
+            13 when frequencyMap.Any(x => x.Value == 3) && frequencyMap.Keys.Count == 2 =>
+                (frequencyMap.Where(x => x.Value == 3).First().Key * 3) +
+                (frequencyMap.Where(x => x.Value == 2).First().Key * 2),
+            //Small Straight
+            14 when frequencyMap.All(x => x.Value == 1) && frequencyMap.All(x => x.Key < 6) =>
+                CountGroups(frequencyMap, 1, 5),
+            //Long Straight
+            15 when frequencyMap.All(x => x.Value == 1) && frequencyMap.All(x => x.Key > 1) =>
+                CountGroups(frequencyMap, 1, 5),
+            //Chance
+            16 => dice.Sum(x => x.Number),
+            //Yahtzee
+            17 => CountGroups(frequencyMap, 5, 1),
+            //Else return 0
+            _ => 0
+        };
 
-            if (player.ScoreTable[columnInScoreTable - 1] != 0)
-            {
-                return -1;
-            }
-
-            switch (columnInScoreTable)
-            {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                case 5:
-                case 6:
-                    //One To Six Score
-                    score = GetScore(frequencyMap,
-                        c => c.Keys.Count > 1,
-                        f => f.Where(x => x.Key == columnInScoreTable).FirstOrDefault().Value * columnInScoreTable);
-                    break;
-                case 9:
-                    //One Pair
-                    score = GetScore(frequencyMap.Where(x => x.Value > 1).ToDictionary(x => x.Key, x => x.Value),
-                        c => c.Keys.Count > 1,
-                        f => f.OrderByDescending(x => x.Key).First().Key * 2);
-                    break;
-                case 10:
-                    //Two Pair
-                    score = GetScore(frequencyMap.Where(x => x.Value > 1).ToDictionary(x => x.Key, x => x.Value),
-                        c => c.Keys.Count > 1,
-                        f => (f.OrderByDescending(x => x.Key).First().Key * 2) +
-                            (f.OrderByDescending(x => x.Key).Skip(1).First().Key * 2));
-                    break;
-                case 11:
-                    //Three Of A Kind
-                    score = GetScore(frequencyMap.Where(x => x.Value > 2).ToDictionary(x => x.Key, x => x.Value),
-                        c => c.Keys.Count > 1,
-                        f => f.OrderByDescending(x => x.Key).First().Key * 3);
-                    break;
-                case 12:
-                    //Four Of A Kind
-                    score = GetScore(frequencyMap.Where(x => x.Value > 3).ToDictionary(x => x.Key, x => x.Value),
-                        c => c.Keys.Count > 1,
-                        f => f.OrderByDescending(x => x.Key).First().Key * 4);
-                    break;
-                case 13:
-                    //Full House
-                    score = GetScore(frequencyMap.Where(x => x.Value > 1).ToDictionary(x => x.Key, x => x.Value),
-                        c => c.Any(x => x.Value > 2) && c.Keys.Count > 1,
-                        f => (f.Where(x => x.Value == 3).First().Key * 3) + 
-                            (f.Where(x => x.Value == 2).First().Key * 2));
-                    break;
-                case 14:
-                    //Small Straight
-                    score = GetScore(frequencyMap,
-                        c => c.All(x => x.Value == 1) && c.All(x => x.Key <6),
-                        f => f.Keys.Sum());
-                    break;
-                case 15:
-                    //Long Straight
-                    score = GetScore(frequencyMap,
-                        c => c.All(x => x.Value == 1) && c.All(x => x.Key > 1),
-                        f => f.Keys.Sum());
-                    break;
-                case 16:
-                    //Chance
-                    foreach (var die in dice)
-                    {
-                        score += die.Number;
-                    }
-                    break;
-                case 17:
-                    //Yahtzee
-                    score = GetScore(frequencyMap,
-                        c => c.Any(x => x.Value == 5),
-                        f => 50);
-                    break;
-            }
-
-            if (setScore)
-            {
-                GameTable.InputScore(player, score, columnInScoreTable - 1);
-                return score;
-            }
-
+        if (accept)
+        {
+            GameTable.InputScore(player, score, columnInScoreTable - 1);
             return score;
         }
 
-        private static int GetScore(Dictionary<int, int> diceMap, Func<Dictionary<int, int>, bool> diceCondition, Func<Dictionary<int, int>, int> f)
-        {
-            if (diceMap.Count != 0 && diceCondition(diceMap))
-            {
-                return f(diceMap);
-            }
+        return score;
+    }
 
-            return 0;
-        }
+    private static int CountGroups(Dictionary<int, int> FrequencyMap, int GroupSize, int GroupCount)
+    {
+        var result = FrequencyMap
+          .Where(g => g.Value >= GroupSize)
+          .OrderByDescending(g => g.Key)
+          .Take(GroupCount);
+
+        return result.Count() == GroupCount ? result.Select(x => x.Key).Sum() * GroupSize : 0;
     }
 }
