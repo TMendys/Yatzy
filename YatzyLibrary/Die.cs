@@ -44,7 +44,7 @@ public class Die : IComparable<Die>
     /// Roll the Die to a random number between the lowestValue and the highestValue.
     /// As default that is between 1 and 6.
     /// </summary>
-    /// <returns>The Die</returns>
+    /// <returns>The rolled die</returns>
     public Die RollDie()
     {
         Number = roll.Next(lowestValue, highestValue + 1);
@@ -56,8 +56,8 @@ public class Die : IComparable<Die>
     /// As default that is between 1 and 6.
     /// </summary>
     /// <param name="die">The die to roll</param>
-    /// <returns></returns>
-    public static Die RollDie(Die die) => RollDie(die);
+    /// <returns>The rolled die</returns>
+    public static Die RollDie(Die die) => die.RollDie();
 
     /// <summary>
     /// Roll a collection of Dice. Each die will have a random number between the 
@@ -113,7 +113,7 @@ public class Dice : List<Die>
     /// </summary>
     /// <param name="findNumber">the numbers to check.</param>
     /// <returns>True if the numbers exist, otherwise false.</returns>
-    public bool CheckNumbers(int[] findNumber)
+    public bool CheckNumbers(params int[] findNumber)
     {
         Dice tempDice = new();
         for (int i = 0; i < findNumber.Length; i++)
