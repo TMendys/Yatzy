@@ -1,6 +1,6 @@
 ﻿namespace YatzyLibrary;
 
-public class Game
+public class GameOver
 {
     /// <summary>
     /// Checks if the game is over.

@@ -15,6 +15,15 @@ public class Die
     }
 
     /// <summary>
+    /// Initialize a die with a fixed number.
+    /// </summary>
+    /// <param name="number">Number to set die at</param>
+    public Die(int number)
+    {
+        Number = number;
+    }
+
+    /// <summary>
     /// Initialize a die with a modified lowest and highest value.
     /// As default that is between 1 and 6.
     /// </summary>
@@ -54,7 +63,7 @@ public class Die
     /// Roll a collection of Dice. Each die will have a random number between the 
     /// lowestValue and the highestValue. As default that is between 1 and 6.
     /// </summary>
-    /// <param name="dice"></param>
+    /// <param name="dice">The collection of dice to be rolled</param>
     /// <returns></returns>
     public static IEnumerable<Die> RollDice(IEnumerable<Die> dice)
     {
@@ -62,5 +71,71 @@ public class Die
         {
             yield return die.RollDie();
         }
+    }
+
+    public override string ToString() => Number.ToString();
+
+    public override bool Equals(object? obj)
+    {
+        if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+        {
+            return false;
+        }
+        Die numberToCompare = (Die)obj;
+        return Number == numberToCompare.Number;
+    }
+
+    public override int GetHashCode()
+    {
+        return Number;
+    }
+}
+
+public class Dice : List<Die>
+{
+    public override string ToString() => string.Join(" ", this);
+
+    /// <summary>
+    /// Roll the Dice of this collection. Each die will have a random number between the 
+    /// lowestValue and the highestValue. As default that is between 1 and 6.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<Die> RollDice()
+    {
+        foreach (var die in this)
+        {
+            yield return die.RollDie();
+        }
+    }
+
+    /// <summary>
+    /// Checks if the numbers exist in the dice as a validation.
+    /// </summary>
+    /// <param name="findNumber">the numbers to check.</param>
+    /// <returns>True if the numbers exist, otherwise false.</returns>
+    public bool CheckNumbers(int[] findNumber)
+    {
+        Dice tempDice = new();
+        for (int i = 0; i < findNumber.Length; i++)
+        {
+            foreach (Die die in this)
+            {
+                if (die.Number == findNumber[i])
+                {
+                    tempDice.Add(die);
+                    Remove(die);
+                    break;
+                }
+            }
+        }
+
+        AddRange(tempDice);
+
+        if (findNumber.Length == tempDice.Count)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

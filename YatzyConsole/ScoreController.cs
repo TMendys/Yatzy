@@ -48,13 +48,12 @@ static class ScoreController
             _ => 0
         };
 
-        if (accept)
-        {
-            GameTable.InputScore(player, score, columnInScoreTable - 1);
-            return score;
-        }
-
         return score;
+    }
+
+    internal static void SaveScore(Player player, int score, int columnInScoreTable)
+    {
+        GameTable.InputScore(player, score, columnInScoreTable - 1);
     }
 
     private static int CountGroups(Dictionary<int, int> FrequencyMap, int GroupSize, int GroupCount)
