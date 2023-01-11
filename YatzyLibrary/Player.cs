@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace YatzyLibrary;
 
-namespace YatzyLibrary
+public class Player
 {
-    public class Player
+    public int[] ScoreTable { get; init; }
+    public string Name { get; init; }
+    public int Score
     {
-        public int[] ScoreTable { get; set; }
-        public string Name { get; set; }
-        public int Score { get => ScoreTable[ScoreTable.Length-1]; set => Score = ScoreTable[ScoreTable.Length-1]; }
+        get => ScoreTable[ScoreTable.Length - 1];
+        set => Score = ScoreTable[ScoreTable.Length - 1];
+    }
 
-        /// <summary>
-        /// The constructor of the player. It creates a array for the score keeping.
-        /// </summary>
-        public Player()
-        {
-            ScoreTable = new int[18];
-        }
+    /// <summary>
+    /// Create a new player. A array creates for the score keeping.
+    /// </summary>
+    /// <param name="name">The name of the player</param>
+    public Player(string name)
+    {
+        Name = name;
+        ScoreTable = new int[18];
     }
 }
