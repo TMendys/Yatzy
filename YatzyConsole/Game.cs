@@ -239,7 +239,7 @@ public class Game
 
         for (int i = 0; i < 18; i++)
         {
-            Write($"{i + 1,1}. {GameTable.TableNames[i],-12}\t");
+            Write($"{i + 1,2}. {GameTable.TableNames[i],-14}");
 
             foreach (int[] table in scoreTable)
             {

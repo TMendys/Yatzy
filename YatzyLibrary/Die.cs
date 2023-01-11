@@ -1,10 +1,10 @@
 ﻿namespace YatzyLibrary;
 
-public class Die
+public class Die : IComparable<Die>
 {
     private static Random roll = new Random();
-    private int lowestValue = 1;
-    private int highestValue = 6;
+    private readonly int lowestValue = 1;
+    private readonly int highestValue = 6;
 
     /// <summary>
     /// Initialize a die with a random number.
@@ -88,6 +88,13 @@ public class Die
     public override int GetHashCode()
     {
         return Number;
+    }
+
+    public int CompareTo(Die? other)
+    {
+        if (other == null) return 1;
+
+        return Number.CompareTo(other.Number);
     }
 }
 
