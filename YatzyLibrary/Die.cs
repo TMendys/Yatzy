@@ -1,25 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace YatzyLibrary;
 
-namespace YatzyLibrary
+public class Die
 {
-    public class Die
-    {
-        /// <summary>
-        /// The number the die has.
-        /// </summary>
-        public int Number { get; set; }
+    private static Random roll = new Random();
+    private int lowestValue = 1;
+    private int highestValue = 6;
 
-        /// <summary>
-        /// Roll a Die to a random number between 1 and 7.
-        /// </summary>
-        /// <param name="dice">A Die object</param>
-        /// <returns>the Die number</returns>
-        public void RollDie()
+    /// <summary>
+    /// Initialize a die with a random number.
+    /// </summary>
+    public Die()
+    {
+        this.RollDie();
+    }
+
+    /// <summary>
+    /// Initialize a die with a modified lowest and highest value.
+    /// As default that is between 1 and 6.
+    /// </summary>
+    /// <param name="lowestValue">Set the lowest value on the die</param>
+    /// <param name="highestValue">Set the highest value on the die</param>
+    public Die(int lowestValue, int highestValue) : this()
+    {
+        this.lowestValue = lowestValue;
+        this.highestValue = highestValue;
+    }
+
+    /// <summary>
+    /// The number the die has.
+    /// </summary>
+    public int Number { get; private set; }
+
+    /// <summary>
+    /// Roll the Die to a random number between the lowestValue and the highestValue.
+    /// As default that is between 1 and 6.
+    /// </summary>
+    /// <returns>The Die</returns>
+    public Die RollDie()
+    {
+        Number = roll.Next(lowestValue, highestValue + 1);
+        return this;
+    }
+
+    /// <summary>
+    /// Roll a Die to a random number between the lowestValue and the highestValue.
+    /// As default that is between 1 and 6.
+    /// </summary>
+    /// <param name="die">The die to roll</param>
+    /// <returns></returns>
+    public static Die RollDie(Die die) => RollDie(die);
+
+    /// <summary>
+    /// Roll a collection of Dice. Each die will have a random number between the 
+    /// lowestValue and the highestValue. As default that is between 1 and 6.
+    /// </summary>
+    /// <param name="dice"></param>
+    /// <returns></returns>
+    public static IEnumerable<Die> RollDice(IEnumerable<Die> dice)
+    {
+        foreach (var die in dice)
         {
-            Random random = new Random();
-            Number = random.Next(1, 7);
+            yield return die.RollDie();
         }
     }
 }
