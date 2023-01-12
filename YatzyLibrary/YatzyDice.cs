@@ -1,6 +1,4 @@
-﻿using YatzyLibrary;
-
-namespace YatzyLibrary;
+﻿namespace YatzyLibrary;
 
 public class YatzyDice
 {

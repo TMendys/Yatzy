@@ -97,7 +97,7 @@ public class Game
         } while (!validation);
     }
 
-    void ChooseRerollDice(Player player, YatzyDice yatzyDice)
+    private void ChooseRerollDice(Player player, YatzyDice yatzyDice)
     {
         bool validation;
         do
@@ -137,7 +137,7 @@ public class Game
         return validation;
     }
 
-    void UseDiceInScoreTable(Player player, YatzyDice yatzyDice)
+    private void UseDiceInScoreTable(Player player, YatzyDice yatzyDice)
     {
         string? input;
         bool validation;
@@ -179,7 +179,7 @@ public class Game
             // columnInScoreTable != 8
             // )
             {
-                int score = ScoreController.CountScore(player, dice, column);
+                int score = Score.CountScore(player, dice, column);
 
                 if (score == -1)
                 {
@@ -193,7 +193,7 @@ public class Game
                     ConsoleKeyInfo inputKey = ReadKey();
                     if (inputKey.Key == ConsoleKey.J)
                     {
-                        ScoreController.SaveScore(player, score, column);
+                        Score.SaveScore(player, score, column);
                         yatzyDice.RollCount = 3;
                     }
                     else
@@ -237,24 +237,24 @@ public class Game
         Clear();
         List<int[]> scoreTable = GameTable.LoadTable(players).ToList();
 
-        Write("\t\t");
+        Write(string.Format("{0,18}", ""));
         foreach (Player player in players)
         {
-            Write($"{player.Name}  ");
+            Write($"{player.Name,-10}");
         }
 
         WriteLine();
 
-        for (int i = 0; i < 18; i++)
+        for (int i = 0; i < scoreTable.First().Length; i++)
         {
             Write($"{i + 1,2}. {GameTable.TableNames[i],-14}");
 
             foreach (int[] table in scoreTable)
             {
                 if (table[i] == -1)
-                    Write("_\t");
+                    Write(string.Format("{0,-10}", "_"));
                 else
-                    Write($"{table[i]}\t");
+                    Write($"{table[i],-10}");
             }
             Write(NewLine);
         }

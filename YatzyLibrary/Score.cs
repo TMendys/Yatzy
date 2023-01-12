@@ -1,8 +1,6 @@
-﻿using YatzyLibrary;
+﻿namespace YatzyLibrary;
 
-namespace YatzyLibrary;
-
-public static class ScoreController
+public static class Score
 {
     public static int CountScore(Player player, Dice dice, int column)
     {

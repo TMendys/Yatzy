@@ -46,7 +46,11 @@ static List<Player> NumberOfPlayers()
             Clear();
             WriteLine($"Spelare {i} skriv in ditt namn:  ");
             name = ReadLine();
-        } while (name == null);
+            if (name?.Length > 10)
+            {
+                name = name[0..10];
+            }
+        } while (string.IsNullOrWhiteSpace(name));
 
         Player player = new(name);
         players.Add(player);

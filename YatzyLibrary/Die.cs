@@ -133,6 +133,7 @@ public class Dice : List<Die>
     /// <returns>True if the numbers exist, otherwise false</returns>
     public bool CheckNumbers(int[] findNumber)
     {
+        // TODO: Maybe use a Dictionary to compare instead.
         Dice tempDice = new();
         for (int i = 0; i < findNumber.Length; i++)
         {
