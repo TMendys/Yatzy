@@ -9,18 +9,20 @@ public class GameOver
     /// <returns>If the game is over or not.</returns>
     public static bool EndCondition(IEnumerable<Player> players)
     {
-        foreach (Player player in players)
+        Player player = players.Last();
+        for (int i = 0; i < player.ScoreTable.Length; i++)
         {
-            for (int i = 0; i < player.ScoreTable.Length; i++)
+            if (player.ScoreTable[i] == -1)
             {
-                if (player.ScoreTable[i] == -1)
-                {
-                    return false;
-                }
+                return false;
             }
         }
-
         return true;
+    }
+
+    public static bool IsTie(IEnumerable<Player> players)
+    {
+        return false;
     }
 
     /// <summary>

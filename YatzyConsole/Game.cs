@@ -6,31 +6,43 @@ namespace YatzyConsole;
 
 public class Game
 {
-    private List<Player> Players { get; init; }
+    private readonly List<Player> players;
 
     public Game(List<Player> players)
     {
-        Players = players;
+        this.players = players;
         StartGame();
+        EndGame();
+    }
+
+    private void EndGame()
+    {
+        DrawTable();
+        foreach (Player player in players)
+        {
+            WriteLine($"{player.Name}: {player.Score}");
+        }
+        Write("{NewLine}");
+        if (GameOver.IsTie(players))
+        {
+
+        }
+        else
+        {
+            WriteLine($"Vinnaren är {GameOver.GetWinner(players).Name}");
+        }
+        ReadKey();
     }
 
     private void StartGame()
     {
         do
         {
-            foreach (Player player in Players)
+            foreach (Player player in players)
             {
                 Round(player);
             }
-        } while (!GameOver.EndCondition(Players));
-
-        DrawTable();
-        foreach (Player player in Players)
-        {
-            WriteLine($"{player.Name}: {player.Score}");
-        }
-        WriteLine($"{NewLine}Vinnaren är {GameOver.GetWinner(Players).Name}");
-        ReadKey();
+        } while (!GameOver.EndCondition(players));
     }
 
     private void Round(Player player)
@@ -223,10 +235,10 @@ public class Game
     private void DrawTable()
     {
         Clear();
-        List<int[]> scoreTable = GameTable.LoadTable(Players).ToList();
+        List<int[]> scoreTable = GameTable.LoadTable(players).ToList();
 
         Write("\t\t");
-        foreach (Player player in Players)
+        foreach (Player player in players)
         {
             Write($"{player.Name}  ");
         }
