@@ -41,7 +41,7 @@ public static class ScoreController
             //Chance
             16 => dice.Sum(x => x.Number),
             //Yahtzee
-            17 => CountGroups(frequencyMap, 5, 1),
+            17 when CountGroups(frequencyMap, 5, 1) > 1 => 50,
             //Else return 0
             _ => 0
         };

@@ -22,7 +22,7 @@ public class Game
         {
             WriteLine($"{player.Name}: {player.Score}");
         }
-        Write("{NewLine}");
+        Write($"{NewLine}");
         if (GameOver.IsTie(players))
         {
 
@@ -127,7 +127,7 @@ public class Game
 
             if (validation)
             {
-                validation = to.CheckNumbers(inputNumbers);
+                validation = from.CheckNumbers(inputNumbers);
             }
             if (validation)
             {
@@ -158,14 +158,14 @@ public class Game
             {
                 WriteLine("Skriv in vilket fält du vill sätta in dina poäng på.");
                 WriteLine("tryck sedan på enter.");
-                WriteLine("Om du trycker enter utan att välja något fält kommer tärningarna att slås igen.");
-                if (string.IsNullOrWhiteSpace(input = ReadLine())) break;
+                input = ReadLine();
             }
             else
             {
                 WriteLine("Om du är klar så skriv in vilket fält du vill sätta in dina poäng på.");
                 WriteLine("tryck sedan på enter.");
-                input = ReadLine();
+                WriteLine("Om du trycker enter utan att välja något fält kommer tärningarna att slås igen.");
+                if (string.IsNullOrWhiteSpace(input = ReadLine())) break;
             }
 
             validation = int.TryParse(input, out int column);

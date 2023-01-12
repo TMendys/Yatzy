@@ -7,7 +7,7 @@ public class Die : IComparable<Die>
     private readonly int highestValue = 6;
 
     /// <summary>
-    /// Initialize a die with a random number.
+    /// Initialize a die with a random number
     /// </summary>
     public Die()
     {
@@ -15,7 +15,7 @@ public class Die : IComparable<Die>
     }
 
     /// <summary>
-    /// Initialize a die with a fixed number.
+    /// Initialize a die with a fixed number
     /// </summary>
     /// <param name="number">Number to set die at</param>
     public Die(int number)
@@ -36,9 +36,27 @@ public class Die : IComparable<Die>
     }
 
     /// <summary>
-    /// The number the die has.
+    /// The number the die has
     /// </summary>
     public int Number { get; private set; }
+
+    /// <summary>
+    /// Set the die at a fixed number between its lowest and highest number
+    /// </summary>
+    /// <param name="number">The number to set the die at</param>
+    /// <returns>The die with its new number</returns>
+    /// <exception cref="ArgumentOutOfRangeException">If the number is outside of its lowest and highest allowed value</exception>
+    public Die SetNumber(int number)
+    {
+        if (number < lowestValue || number > highestValue)
+        {
+            throw new ArgumentOutOfRangeException(
+                paramName: nameof(number), actualValue: number,
+                message: $"Number has to be between {lowestValue} and {highestValue}.");
+        }
+        Number = number;
+        return this;
+    }
 
     /// <summary>
     /// Roll the Die to a random number between the lowestValue and the highestValue.
@@ -109,10 +127,10 @@ public class Dice : List<Die>
     public void RollDice() => ForEach(x => x.RollDie());
 
     /// <summary>
-    /// Checks if the numbers exist in the dice as a validation.
+    /// Checks if the numbers exist in the dice as a validation
     /// </summary>
-    /// <param name="findNumber">the numbers to check.</param>
-    /// <returns>True if the numbers exist, otherwise false.</returns>
+    /// <param name="findNumber">the numbers to check</param>
+    /// <returns>True if the numbers exist, otherwise false</returns>
     public bool CheckNumbers(int[] findNumber)
     {
         Dice tempDice = new();

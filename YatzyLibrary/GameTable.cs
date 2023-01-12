@@ -48,7 +48,6 @@ public static class GameTable
     /// <param name="player">The player</param>
     private static void SumAndBonusChecker(Player player)
     {
-        // TODO: Make this method less dependent on index numbers, use variable names instead.
         int sum = 0;
 
         for (int i = 0; i < 6; i++)
@@ -88,14 +87,9 @@ public static class GameTable
     /// <returns>A list of arrays containing the score tables of every player.</returns>
     public static IEnumerable<int[]> LoadTable(IEnumerable<Player> players)
     {
-        List<int[]> scoreTable = new();
-
         foreach (Player player in players)
         {
-            // TODO: Change this method to make use of yield
-            scoreTable.Add(player.ScoreTable);
+            yield return player.ScoreTable;
         }
-
-        return scoreTable;
     }
 }

@@ -32,7 +32,6 @@ public class YatzyDice
 
     public void Roll()
     {
-        //Die.RollDice(RolledDice);
         RolledDice.RollDice();
         RollCount++;
     }
