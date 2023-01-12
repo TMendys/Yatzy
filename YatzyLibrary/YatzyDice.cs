@@ -1,8 +1,8 @@
 ﻿using YatzyLibrary;
 
-namespace YatzyConsole;
+namespace YatzyLibrary;
 
-class YatzyDice
+public class YatzyDice
 {
     public Dice RolledDice { get; set; }
     public Dice SavedDice { get; set; }
@@ -41,34 +41,21 @@ class YatzyDice
     /// Move Dice from one list to an other.
     /// </summary>
     /// <param name="numbers">What numbers to move.</param>
-    /// <param name="diceTo">What list to move to.</param>
-    /// <param name="diceFrom">What list to move from.</param>
-    public static void MoveDice(int[] numbers, List<Die> diceTo, List<Die> diceFrom)
+    /// <param name="to">What list to move to.</param>
+    /// <param name="from">What list to move from.</param>
+    public static void MoveDice(int[] numbers, Dice to, Dice from)
     {
         for (int i = 0; i < numbers.Length; i++)
         {
-            foreach (Die die in diceFrom)
+            foreach (Die die in from)
             {
                 if (die.Number == numbers[i])
                 {
-                    diceTo.Add(die);
-                    diceFrom.Remove(die);
+                    to.Add(die);
+                    from.Remove(die);
                     break;
                 }
             }
-        }
-    }
-
-    /// <summary>
-    /// Removes dice from a list.
-    /// </summary>
-    /// <param name="diceToRemoveFrom">What list to remove from.</param>
-    /// <param name="diceToRemove">What dice to remove.</param>
-    internal static void RemoveDice(List<Die> diceToRemoveFrom, List<Die> diceToRemove)
-    {
-        foreach (Die die in diceToRemove)
-        {
-            diceToRemoveFrom.Remove(die);
         }
     }
 }

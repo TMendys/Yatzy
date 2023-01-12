@@ -37,7 +37,32 @@ public class Game
     {
         YatzyDice yatzyDice = new();
 
-        void Intro()
+        //every player have 3 rolls.
+        while (yatzyDice.RolledDice.Count > 0 && yatzyDice.RollCount < 3)
+        {
+            yatzyDice.Roll();
+
+            // The player can choose to save some dice after each roll.
+            if (yatzyDice.RollCount != 3)
+            {
+                ChooseDice(player, yatzyDice);
+            }
+
+            // The player can choose to reroll his saved dice.
+            if (yatzyDice.RollCount == 2 && yatzyDice.SavedDice.Count != 0)
+            {
+                ChooseRerollDice(player, yatzyDice);
+            }
+
+            // The player can choose to use his dice and end his turn.
+            UseDiceInScoreTable(player, yatzyDice);
+        }
+    }
+
+    private void ChooseDice(Player player, YatzyDice yatzyDice)
+    {
+        bool validation;
+        do
         {
             DrawTable();
             WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
@@ -47,156 +72,129 @@ public class Game
                 WriteLine("Dina valda tärningar:  ");
                 WriteLine($"{yatzyDice.SavedDice}{NewLine}");
             }
-        }
 
-        //every player have 3 rolls.
-        while (yatzyDice.RolledDice.Count > 0 && yatzyDice.RollCount < 3)
+            WriteLine("Du slog: ");
+            WriteLine($"{yatzyDice.RolledDice}{NewLine}");
+
+            //The player has to chose what dice he wants to use.
+            WriteLine("Om du önskar behålla några tärningar så välj vilka nummer du vill behålla.");
+            WriteLine("Lämna ett mellanrum mellan varje nummer, tryck sedan på enter.");
+
+            validation = ChooseMoveDice(to: yatzyDice.SavedDice, from: yatzyDice.RolledDice);
+
+        } while (!validation);
+    }
+
+    void ChooseRerollDice(Player player, YatzyDice yatzyDice)
+    {
+        bool validation;
+        do
         {
-            yatzyDice.Roll();
-            string? input;
-            int[] inputNumbers;
-            bool validation = false;
+            DrawTable();
+            WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
 
-            while (!validation && yatzyDice.RollCount != 3)
+            WriteLine("Dina valda tärningar:  ");
+            WriteLine($"{yatzyDice.SavedDice}{NewLine}");
+
+            WriteLine("Vill du slå om några av dina valda tärningar?");
+            WriteLine("Välj vilka nummer du vill slå om, lämna ett mellanrum mellan varje nummer,");
+            WriteLine("tryck sedan på enter.");
+
+            validation = ChooseMoveDice(to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
+
+        } while (!validation);
+    }
+
+    private static bool ChooseMoveDice(Dice to, Dice from)
+    {
+        string? input;
+        bool validation = true;
+        if (!string.IsNullOrWhiteSpace(input = ReadLine()))
+        {
+            validation = TryParseToArray(input, out int[] inputNumbers);
+
+            if (validation)
             {
-                Intro();
+                validation = to.CheckNumbers(inputNumbers);
+            }
+            if (validation)
+            {
+                YatzyDice.MoveDice(inputNumbers, to, from);
+            }
+        }
+        return validation;
+    }
 
-                WriteLine("Du slog: ");
-                WriteLine($"{yatzyDice.RolledDice}{NewLine}");
+    void UseDiceInScoreTable(Player player, YatzyDice yatzyDice)
+    {
+        string? input;
+        bool validation;
+        do
+        {
+            Dice dice = new();
+            dice.AddRange(yatzyDice.SavedDice);
+            dice.AddRange(yatzyDice.RolledDice);
+            dice.Sort();
 
-                //The player has to chose what dice he wants to use.
-                WriteLine("Om du önskar behålla några tärningar så välj vilka nummer du vill behålla.");
-                WriteLine("Lämna ett mellanrum mellan varje nummer, tryck sedan på enter.");
+            DrawTable();
+            WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
 
-                if (!string.IsNullOrWhiteSpace(input = ReadLine()))
-                {
-                    validation = TryParseToArray(input, out inputNumbers);
+            WriteLine("Dina tärningar:  ");
+            WriteLine($"{dice}{NewLine}");
 
-                    if (validation)
-                    {
-                        validation = yatzyDice.RolledDice.CheckNumbers(inputNumbers);
-                    }
-                    if (validation)
-                    {
-                        YatzyDice.MoveDice(inputNumbers, yatzyDice.SavedDice, yatzyDice.RolledDice);
-                    }
-                }
-                else
-                {
-                    validation = true;
-                }
+            if (yatzyDice.RollCount == 3 || yatzyDice.SavedDice.Count == 5)
+            {
+                WriteLine("Skriv in vilket fält du vill sätta in dina poäng på.");
+                WriteLine("tryck sedan på enter.");
+                WriteLine("Om du trycker enter utan att välja något fält kommer tärningarna att slås igen.");
+                if (string.IsNullOrWhiteSpace(input = ReadLine())) break;
+            }
+            else
+            {
+                WriteLine("Om du är klar så skriv in vilket fält du vill sätta in dina poäng på.");
+                WriteLine("tryck sedan på enter.");
+                input = ReadLine();
             }
 
-            //The player can choose to roll his saved dice.
-            do
+            validation = int.TryParse(input, out int column);
+            //YahtzeeCombination? column = columnInScoreTable as YahtzeeCombination?;
+
+            if (validation && typeof(YahtzeeCombination).IsEnumDefined(column))
+            // validation &&
+            // columnInScoreTable > 0 &&
+            // columnInScoreTable < 18 &&
+            // columnInScoreTable != 7 &&
+            // columnInScoreTable != 8
+            // )
             {
-                if (yatzyDice.RollCount == 2 && yatzyDice.SavedDice.Count != 0)
+                int score = ScoreController.CountScore(player, dice, column);
+
+                if (score == -1)
                 {
-                    Intro();
-
-                    WriteLine("Vill du slå om några av dina valda tärningar?");
-                    WriteLine("Välj vilka nummer du vill slå om, lämna ett mellanrum mellan varje nummer,");
-                    WriteLine("tryck sedan på enter.");
-
-                    if (!string.IsNullOrWhiteSpace(input = ReadLine()))
-                    {
-                        validation = TryParseToArray(input, out inputNumbers);
-
-                        if (validation)
-                        {
-                            validation = yatzyDice.SavedDice.CheckNumbers(inputNumbers);
-                        }
-                        if (validation)
-                        {
-                            YatzyDice.MoveDice(inputNumbers, yatzyDice.RolledDice, yatzyDice.SavedDice);
-                        }
-                    }
-                    else
-                    {
-                        validation = true;
-                    }
-                }
-                else
-                {
-                    validation = true;
-                }
-            } while (!validation);
-
-            do
-            {
-                Dice dice = new();
-                dice.AddRange(yatzyDice.SavedDice);
-                dice.AddRange(yatzyDice.RolledDice);
-                dice.Sort();
-
-                DrawTable();
-                WriteLine($"Det är {player.Name}s tur. Slag nummer {yatzyDice.RollCount}.{NewLine}");
-
-                WriteLine("Dina tärningar:  ");
-                WriteLine($"{dice}{NewLine}");
-
-                if (yatzyDice.RollCount == 3 || yatzyDice.SavedDice.Count == 5)
-                {
-                    WriteLine("Skriv in vilket fält du vill sätta in dina poäng på.");
-                }
-                else
-                {
-                    WriteLine("Om du är klar så skriv in vilket fält du vill sätta in dina poäng på.");
-                }
-
-                WriteLine("tryck sedan på enter.");
-
-                if (yatzyDice.RollCount < 3 && yatzyDice.SavedDice.Count != 5)
-                {
-                    WriteLine("Om du trycker enter utan att välja något fält kommer tärningarna att slås igen.");
-                    if (string.IsNullOrWhiteSpace(input = ReadLine()))
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    input = ReadLine();
-                }
-
-
-                validation = int.TryParse(input, out int columnInScoreTable);
-
-                if (validation &&
-                    columnInScoreTable > 0 &&
-                    columnInScoreTable < 18 &&
-                    columnInScoreTable != 7 &&
-                    columnInScoreTable != 8)
-                {
-                    int score = ScoreController.CountScore(player, dice, columnInScoreTable);
-
-                    if (score == -1)
-                    {
-                        WriteLine("Du Har redan använt den kolumnen. Välj en annan. Tryck enter för att fortsätta");
-                        ReadKey();
-                        validation = false;
-                    }
-                    else
-                    {
-                        WriteLine($"Du får {score} poäng. Vill du fortsätta? (J/N)");
-                        ConsoleKeyInfo inputKey = ReadKey();
-                        if (inputKey.Key == ConsoleKey.J)
-                        {
-                            ScoreController.SaveScore(player, score, columnInScoreTable);
-                            yatzyDice.RollCount = 3;
-                        }
-                        else
-                        {
-                            validation = false;
-                        }
-                    }
-                }
-                else
-                {
+                    WriteLine("Du Har redan använt den kolumnen. Välj en annan. Tryck enter för att fortsätta");
+                    ReadKey();
                     validation = false;
                 }
-            } while (!validation);
-        }
+                else
+                {
+                    WriteLine($"Du får {score} poäng. Vill du fortsätta? (J/N)");
+                    ConsoleKeyInfo inputKey = ReadKey();
+                    if (inputKey.Key == ConsoleKey.J)
+                    {
+                        ScoreController.SaveScore(player, score, column);
+                        yatzyDice.RollCount = 3;
+                    }
+                    else
+                    {
+                        validation = false;
+                    }
+                }
+            }
+            else
+            {
+                validation = false;
+            }
+        } while (!validation);
     }
 
     /// <summary>
@@ -241,9 +239,7 @@ public class Game
 
             foreach (int[] table in scoreTable)
             {
-                if (table[i] == 0)
-                    Write("0\t");
-                else if (table[i] == -1)
+                if (table[i] == -1)
                     Write("_\t");
                 else
                     Write($"{table[i]}\t");

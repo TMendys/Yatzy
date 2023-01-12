@@ -2,7 +2,7 @@
 
 public class Die : IComparable<Die>
 {
-    private static Random roll = new Random();
+    private readonly static Random roll = new();
     private readonly int lowestValue = 1;
     private readonly int highestValue = 6;
 
@@ -113,7 +113,7 @@ public class Dice : List<Die>
     /// </summary>
     /// <param name="findNumber">the numbers to check.</param>
     /// <returns>True if the numbers exist, otherwise false.</returns>
-    public bool CheckNumbers(params int[] findNumber)
+    public bool CheckNumbers(int[] findNumber)
     {
         Dice tempDice = new();
         for (int i = 0; i < findNumber.Length; i++)

@@ -1,26 +1,25 @@
 ﻿using YatzyLibrary;
 
-namespace YatzyConsole;
+namespace YatzyLibrary;
 
-static class ScoreController
+public static class ScoreController
 {
-    internal static int CountScore(Player player, List<Die> dice, int columnInScoreTable)
+    public static int CountScore(Player player, Dice dice, int column)
     {
         Dictionary<int, int> frequencyMap =
             dice.GroupBy(x => x.Number)
             .ToDictionary(x => x.Key, x => x.Count());
 
-
-        if (player.ScoreTable[columnInScoreTable - 1] != -1)
+        if (player.ScoreTable[column - 1] != -1)
         {
             return -1;
         }
 
-        int score = columnInScoreTable switch
+        int score = column switch
         {
             //One To Six Score
-            <= 6 when dice.Where(x => x.Number == columnInScoreTable).Any() =>
-                dice.Where(x => x.Number == columnInScoreTable).Count() * columnInScoreTable,
+            <= 6 when dice.Where(x => x.Number == column).Any() =>
+                dice.Where(x => x.Number == column).Count() * column,
             //One Pair
             9 => CountGroups(frequencyMap, 2, 1),
             //Two Pair
@@ -50,7 +49,7 @@ static class ScoreController
         return score;
     }
 
-    internal static void SaveScore(Player player, int score, int columnInScoreTable)
+    public static void SaveScore(Player player, int score, int columnInScoreTable)
     {
         GameTable.InputScore(player, score, columnInScoreTable - 1);
     }

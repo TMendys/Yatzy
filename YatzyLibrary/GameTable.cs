@@ -1,6 +1,6 @@
 ﻿namespace YatzyLibrary;
 
-public enum YahtzeeCombination
+public enum YahtzeeCombination : int
 {
     Ones = 1,
     Twos = 2,
@@ -8,15 +8,15 @@ public enum YahtzeeCombination
     Fours = 4,
     Fives = 5,
     Sixes = 6,
-    OnePair,
-    TwoPair,
-    ThreeOfAKind,
-    FourOfAKind,
-    FullHouse,
-    SmallStraight,
-    LongStraight,
-    Chance,
-    Yatzee
+    OnePair = 9,
+    TwoPair = 10,
+    ThreeOfAKind = 11,
+    FourOfAKind = 12,
+    FullHouse = 13,
+    SmallStraight = 14,
+    LongStraight = 15,
+    Chance = 16,
+    Yatzee = 17
 }
 
 public static class GameTable
