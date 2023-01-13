@@ -24,12 +24,25 @@ public struct Die : IComparable<Die>
     }
 
     /// <summary>
-    /// Initialize a die with a modified lowest and highest value.
+    /// Initialize a die with a modified lowest and highest value and gives the die a Random number.
     /// As default that is between 1 and 6.
     /// </summary>
     /// <param name="lowestValue">Set the lowest value on the die</param>
     /// <param name="highestValue">Set the highest value on the die</param>
     public Die(int lowestValue, int highestValue) : this()
+    {
+        this.lowestValue = lowestValue;
+        this.highestValue = highestValue;
+    }
+
+    /// <summary>
+    /// Initialize a die with a modified lowest and highest value and a fixed number.
+    /// As default that is between 1 and 6.
+    /// </summary>
+    /// <param name="lowestValue">Set the lowest value on the die</param>
+    /// <param name="highestValue">Set the highest value on the die</param>
+    /// <param name="number">Number to set die at</param>
+    public Die(int lowestValue, int highestValue, int number) : this(number)
     {
         this.lowestValue = lowestValue;
         this.highestValue = highestValue;
@@ -167,30 +180,19 @@ public class Dice : List<Die>
     /// </summary>
     /// <param name="findNumber">the numbers to check</param>
     /// <returns>True if the numbers exist, otherwise false</returns>
-    public bool CheckNumbers(int[] findNumber)
+    public bool CheckNumbers(params int[] findNumber)
     {
-        // TODO: Maybe use a Dictionary to compare instead.
-        Dice tempDice = new();
-        for (int i = 0; i < findNumber.Length; i++)
+        var numbersToFind = findNumber.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
+        var diceToCheck = this.GroupBy(x => x.Number).ToDictionary(x => x.Key, x => x.Count());
+
+        foreach (var number in numbersToFind)
         {
-            foreach (Die die in this)
+            if (!(diceToCheck.ContainsKey(number.Key) && diceToCheck.GetValueOrDefault(number.Key) >= number.Value))
             {
-                if (die.Number == findNumber[i])
-                {
-                    tempDice.Add(die);
-                    Remove(die);
-                    break;
-                }
+                return false;
             }
         }
 
-        AddRange(tempDice);
-
-        if (findNumber.Length == tempDice.Count)
-        {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }
