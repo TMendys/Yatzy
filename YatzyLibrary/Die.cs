@@ -112,6 +112,36 @@ public struct Die : IComparable<Die>
     {
         return Number.CompareTo(other.Number);
     }
+
+    public static bool operator ==(Die left, Die right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Die left, Die right)
+    {
+        return !(left == right);
+    }
+
+    public static bool operator <(Die left, Die right)
+    {
+        return left.CompareTo(right) < 0;
+    }
+
+    public static bool operator <=(Die left, Die right)
+    {
+        return left.CompareTo(right) <= 0;
+    }
+
+    public static bool operator >(Die left, Die right)
+    {
+        return left.CompareTo(right) > 0;
+    }
+
+    public static bool operator >=(Die left, Die right)
+    {
+        return left.CompareTo(right) >= 0;
+    }
 }
 
 public class Dice : List<Die>
