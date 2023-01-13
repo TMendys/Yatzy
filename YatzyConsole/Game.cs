@@ -58,7 +58,10 @@ public class Game
         while (yatzyDice.RolledDice.Count > 0 && yatzyDice.RollCount < 3)
         {
             yatzyDice.Roll();
+            // TODO: Make a key listener on an other thread, when esc is pressed it should restart the next while loop.
 
+            // do
+            // {
             // The player can choose to save some dice after each roll.
             if (yatzyDice.RollCount != 3)
             {
@@ -73,12 +76,14 @@ public class Game
 
             // The player can choose to use his dice and end his turn.
             UseDiceInScoreTable(player, yatzyDice);
+            // } while (true);
         }
     }
 
     private void ChooseDice(Player player, YatzyDice yatzyDice)
     {
-        bool validation;
+        string? input;
+        bool validation = true;
         do
         {
             DrawTable();
@@ -97,14 +102,18 @@ public class Game
             WriteLine("Om du önskar behålla några tärningar så välj vilka nummer du vill behålla.");
             WriteLine("Lämna ett mellanrum mellan varje nummer, tryck sedan på enter.");
 
-            validation = ChooseMoveDice(to: yatzyDice.SavedDice, from: yatzyDice.RolledDice);
+            if (!string.IsNullOrWhiteSpace(input = ReadLine()))
+            {
+                validation = ChooseMoveDice(input, to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
+            }
 
         } while (!validation);
     }
 
     private void ChooseRerollDice(Player player, YatzyDice yatzyDice)
     {
-        bool validation;
+        string? input;
+        bool validation = true;
         do
         {
             DrawTable();
@@ -117,28 +126,33 @@ public class Game
             WriteLine("Välj vilka nummer du vill slå om, lämna ett mellanrum mellan varje nummer,");
             WriteLine("tryck sedan på enter.");
 
-            validation = ChooseMoveDice(to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
+            if (!string.IsNullOrWhiteSpace(input = ReadLine()))
+            {
+                validation = ChooseMoveDice(input, to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
+            }
 
         } while (!validation);
     }
 
-    private static bool ChooseMoveDice(Dice to, Dice from)
+    /// <summary>
+    /// Moves dice between different dice sets
+    /// </summary>
+    /// <param name="input">The input to parse</param>
+    /// <param name="to">to what set to move dice to</param>
+    /// <param name="from">from what set to move dice from</param>
+    /// <returns>true if successfull, else false</returns>
+    private static bool ChooseMoveDice(string input, Dice to, Dice from)
     {
-        string? input;
-        bool validation = true;
-        if (!string.IsNullOrWhiteSpace(input = ReadLine()))
+        bool validation = TryParseToArray(input, out int[] inputNumbers);
+        if (validation)
         {
-            validation = TryParseToArray(input, out int[] inputNumbers);
-
-            if (validation)
-            {
-                validation = from.CheckNumbers(inputNumbers);
-            }
-            if (validation)
-            {
-                YatzyDice.MoveDice(inputNumbers, to, from);
-            }
+            validation = from.CheckNumbers(inputNumbers);
         }
+        if (validation)
+        {
+            YatzyDice.MoveDice(inputNumbers, to, from);
+        }
+
         return validation;
     }
 
@@ -174,15 +188,8 @@ public class Game
             }
 
             validation = int.TryParse(input, out int column);
-            //YahtzeeCombination? column = columnInScoreTable as YahtzeeCombination?;
 
             if (validation && typeof(YahtzeeCombination).IsEnumDefined(column))
-            // validation &&
-            // columnInScoreTable > 0 &&
-            // columnInScoreTable < 18 &&
-            // columnInScoreTable != 7 &&
-            // columnInScoreTable != 8
-            // )
             {
                 int score = Score.CountScore(player, dice, column);
 
@@ -215,11 +222,11 @@ public class Game
     }
 
     /// <summary>
-    /// Takes an input, splits it and creates an array. If it succeeds it return true and else false.
+    /// Takes an input, splits it and creates an array
     /// </summary>
-    /// <param name="input"></param>
-    /// <param name="inputNumbers"></param>
-    /// <returns>if the algorithm succeeds it creating an array.</returns>
+    /// <param name="input">The string to parse</param>
+    /// <param name="inputNumbers">The array to save the inputed numbers if it succeeds</param>
+    /// <returns>If it succeeds it return true and else false</returns>
     private static bool TryParseToArray(string input, out int[] inputNumbers, char seperator = ' ')
     {
         string[] numbers = input.Split(seperator);
@@ -235,7 +242,7 @@ public class Game
     }
 
     /// <summary>
-    /// Draws the table to the console.
+    /// Draws the table to the console
     /// </summary>
     private void DrawTable()
     {
