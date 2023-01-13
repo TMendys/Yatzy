@@ -18,14 +18,19 @@ public class Game
     private void EndGame()
     {
         DrawTable();
-        foreach (Player player in players)
+        var orderdPlayers = players.OrderByDescending(x => x.Score);
+        foreach (Player player in orderdPlayers)
         {
             WriteLine($"{player.Name}: {player.Score}");
         }
         Write($"{NewLine}");
-        if (GameOver.IsTie(players))
+        if (GameOver.IsTie(players, out List<Player> tiedPlayers))
         {
-
+            WriteLine("Följande personer delade vinsten: ");
+            foreach (Player player in tiedPlayers)
+            {
+                Write($"{player} ");
+            }
         }
         else
         {
