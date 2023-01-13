@@ -20,8 +20,10 @@ public class GameOver
         return true;
     }
 
-    public static bool IsTie(IEnumerable<Player> players)
+    public static bool IsTie(IEnumerable<Player> players, out List<Player> tiedPlayers)
     {
+        tiedPlayers = players.Where(x => x.Score == players?.MaxBy(x => x.Score)?.Score).ToList();
+        if (tiedPlayers.Count > 1) { return true; }
         return false;
     }
 

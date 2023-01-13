@@ -30,7 +30,7 @@ public class YatzyDice
 
     public void Roll()
     {
-        RolledDice.RollDice();
+        RolledDice = RolledDice.RollDice();
         RollCount++;
     }
 

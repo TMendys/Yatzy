@@ -1,6 +1,6 @@
 ﻿namespace YatzyLibrary;
 
-public class Die : IComparable<Die>
+public struct Die : IComparable<Die>
 {
     private readonly static Random roll = new();
     private readonly int lowestValue = 1;
@@ -11,7 +11,7 @@ public class Die : IComparable<Die>
     /// </summary>
     public Die()
     {
-        this.RollDie();
+        RollDie();
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class Die : IComparable<Die>
     /// <summary>
     /// The number the die has
     /// </summary>
-    public int Number { get; private set; }
+    public int Number { get; private set; } = default;
 
     /// <summary>
     /// Set the die at a fixed number between its lowest and highest number
@@ -108,10 +108,8 @@ public class Die : IComparable<Die>
         return Number;
     }
 
-    public int CompareTo(Die? other)
+    public int CompareTo(Die other)
     {
-        if (other == null) return 1;
-
         return Number.CompareTo(other.Number);
     }
 }
@@ -124,7 +122,15 @@ public class Dice : List<Die>
     /// Roll the Dice of this collection. Each die will have a random number between the 
     /// lowestValue and the highestValue. As default that is between 1 and 6.
     /// </summary>
-    public void RollDice() => ForEach(x => x.RollDie());
+    public Dice RollDice()
+    {
+        Dice dice = new();
+        foreach (Die die in this)
+        {
+            dice.Add(die.RollDie());
+        }
+        return dice;
+    }
 
     /// <summary>
     /// Checks if the numbers exist in the dice as a validation
