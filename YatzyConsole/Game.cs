@@ -58,7 +58,7 @@ public class Game
         while (yatzyDice.RolledDice.Count > 0 && yatzyDice.RollCount < 3)
         {
             yatzyDice.Roll();
-            // TODO: Make a key listener on an other thread, when esc is pressed it should restart the next while loop.
+            // TODO: Make a key listener on an other thread, when esc is pressed it should restart the while loop.
 
             // do
             // {
@@ -98,13 +98,12 @@ public class Game
             WriteLine("Du slog: ");
             WriteLine($"{yatzyDice.RolledDice}{NewLine}");
 
-            //The player has to chose what dice he wants to use.
             WriteLine("Om du önskar behålla några tärningar så välj vilka nummer du vill behålla.");
             WriteLine("Lämna ett mellanrum mellan varje nummer, tryck sedan på enter.");
 
             if (!string.IsNullOrWhiteSpace(input = ReadLine()))
             {
-                validation = ChooseMoveDice(input, to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
+                validation = MoveDice(input, to: yatzyDice.SavedDice, from: yatzyDice.RolledDice);
             }
 
         } while (!validation);
@@ -128,7 +127,7 @@ public class Game
 
             if (!string.IsNullOrWhiteSpace(input = ReadLine()))
             {
-                validation = ChooseMoveDice(input, to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
+                validation = MoveDice(input, to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
             }
 
         } while (!validation);
@@ -141,12 +140,12 @@ public class Game
     /// <param name="to">to what set to move dice to</param>
     /// <param name="from">from what set to move dice from</param>
     /// <returns>true if successfull, else false</returns>
-    private static bool ChooseMoveDice(string input, Dice to, Dice from)
+    private static bool MoveDice(string input, Dice to, Dice from)
     {
         bool validation = TryParseToArray(input, out int[] inputNumbers);
         if (validation)
         {
-            validation = from.CheckNumbers(inputNumbers);
+            validation = from.Contains(inputNumbers);
         }
         if (validation)
         {

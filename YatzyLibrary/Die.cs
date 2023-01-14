@@ -180,7 +180,7 @@ public class Dice : List<Die>
     /// </summary>
     /// <param name="findNumber">the numbers to check</param>
     /// <returns>True if the numbers exist, otherwise false</returns>
-    public bool CheckNumbers(params int[] findNumber)
+    public bool Contains(params int[] findNumber)
     {
         var numbersToFind = findNumber.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count());
         var diceToCheck = this.GroupBy(x => x.Number).ToDictionary(x => x.Key, x => x.Count());
