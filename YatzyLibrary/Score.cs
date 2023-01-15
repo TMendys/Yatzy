@@ -2,6 +2,13 @@
 
 public static class Score
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="dice"></param>
+    /// <param name="column"></param>
+    /// <returns></returns>
     public static int CountScore(Player player, Dice dice, int column)
     {
         Dictionary<int, int> frequencyMap =
@@ -47,11 +54,24 @@ public static class Score
         return score;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="score"></param>
+    /// <param name="columnInScoreTable"></param>
     public static void SaveScore(Player player, int score, int columnInScoreTable)
     {
         GameTable.InputScore(player, score, columnInScoreTable - 1);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="FrequencyMap"></param>
+    /// <param name="GroupSize"></param>
+    /// <param name="GroupCount"></param>
+    /// <returns></returns>
     private static int CountGroups(Dictionary<int, int> FrequencyMap, int GroupSize, int GroupCount)
     {
         var result = FrequencyMap

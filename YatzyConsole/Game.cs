@@ -225,7 +225,7 @@ public class Game
     /// </summary>
     /// <param name="input">The string to parse</param>
     /// <param name="inputNumbers">The array to save the inputed numbers if it succeeds</param>
-    /// <returns>If it succeeds it return true and else false</returns>
+    /// <returns>If it succeeds it return true. Otherwise false</returns>
     private static bool TryParseToArray(string input, out int[] inputNumbers, char seperator = ' ')
     {
         string[] numbers = input.Split(seperator);

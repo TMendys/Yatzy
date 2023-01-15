@@ -14,10 +14,10 @@ public class YatzyDice
     }
 
     /// <summary>
-    /// Add die/dice to a list.
+    /// 
     /// </summary>
-    /// <param name="dice">the list to add to.</param>
-    /// <param name="numberOfDice">The number of dice to add.</param>
+    /// <param name="numberOfDice"></param>
+    /// <returns></returns>
     private static Dice AddDice(int numberOfDice)
     {
         Dice dice = new();
@@ -28,6 +28,9 @@ public class YatzyDice
         return dice;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void Roll()
     {
         RolledDice = RolledDice.RollDice();

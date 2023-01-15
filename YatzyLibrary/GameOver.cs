@@ -20,6 +20,12 @@ public class GameOver
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="players"></param>
+    /// <param name="tiedPlayers"></param>
+    /// <returns></returns>
     public static bool IsTie(IEnumerable<Player> players, out List<Player> tiedPlayers)
     {
         tiedPlayers = players.Where(x => x.Score == players?.MaxBy(x => x.Score)?.Score).ToList();
