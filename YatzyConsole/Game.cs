@@ -7,10 +7,15 @@ namespace YatzyConsole;
 public class Game
 {
     private readonly List<Player> players;
+    private Stack<Action> choices;
+    private Stack<Action> finishedChoices;
+    private bool canceled = false;
 
     public Game(List<Player> players)
     {
         this.players = players;
+        choices = new();
+        finishedChoices = new();
         StartGame();
         EndGame();
     }
@@ -58,30 +63,31 @@ public class Game
         while (yatzyDice.RolledDice.Count > 0 && yatzyDice.RollCount < 3)
         {
             yatzyDice.Roll();
-            // TODO: Make a key listener on an other thread, when esc is pressed it should restart the while loop.
-
-            // do
-            // {
-            // The player can choose to save some dice after each roll.
-            if (yatzyDice.RollCount != 3)
-            {
-                ChooseDice(player, yatzyDice);
-            }
-
-            // The player can choose to reroll his saved dice.
-            if (yatzyDice.RollCount == 2 && yatzyDice.SavedDice.Count != 0)
-            {
-                ChooseRerollDice(player, yatzyDice);
-            }
-
+            choices.Clear();
+            finishedChoices.Clear();
             // The player can choose to use his dice and end his turn.
-            UseDiceInScoreTable(player, yatzyDice);
-            // } while (true);
+            choices.Push(() => UseDiceInScoreTable(player, yatzyDice));
+            // The player can choose to reroll his saved dice.
+            choices.Push(() => ChooseRerollDice(player, yatzyDice));
+            // The player can choose to save some dice after each roll.
+            choices.Push(() => ChooseDice(player, yatzyDice));
+
+            do
+            {
+                canceled = false;
+                choices.Peek().Invoke();
+                if (canceled is false)
+                {
+                    finishedChoices.Push(choices.Pop());
+                }
+            } while (choices.Count != 0);
         }
     }
 
     private void ChooseDice(Player player, YatzyDice yatzyDice)
     {
+        if (yatzyDice.RollCount == 3) { return; }
+
         string? input;
         bool validation = true;
         do
@@ -111,6 +117,8 @@ public class Game
 
     private void ChooseRerollDice(Player player, YatzyDice yatzyDice)
     {
+        if (yatzyDice.RollCount != 2 || yatzyDice.SavedDice.Count == 0) { return; }
+
         string? input;
         bool validation = true;
         do
@@ -124,9 +132,16 @@ public class Game
             WriteLine("Vill du slå om några av dina valda tärningar?");
             WriteLine("Välj vilka nummer du vill slå om, lämna ett mellanrum mellan varje nummer,");
             WriteLine("tryck sedan på enter.");
+            WriteLine("Du kan skriva \"backa\" för att gå tillbaks till föregående val.");
 
             if (!string.IsNullOrWhiteSpace(input = ReadLine()))
             {
+                if (input == "backa")
+                {
+                    choices.Push(finishedChoices.Pop());
+                    canceled = true;
+                    break;
+                }
                 validation = MoveDice(input, to: yatzyDice.RolledDice, from: yatzyDice.SavedDice);
             }
 
@@ -176,6 +191,7 @@ public class Game
             {
                 WriteLine("Skriv in vilket fält du vill sätta in dina poäng på.");
                 WriteLine("tryck sedan på enter.");
+                WriteLine("Du kan skriva \"backa\" för att gå tillbaks till föregående val.");
                 input = ReadLine();
             }
             else
@@ -183,7 +199,19 @@ public class Game
                 WriteLine("Om du är klar så skriv in vilket fält du vill sätta in dina poäng på.");
                 WriteLine("tryck sedan på enter.");
                 WriteLine("Om du trycker enter utan att välja något fält kommer tärningarna att slås igen.");
+                WriteLine("Du kan skriva \"backa\" för att gå tillbaks till föregående val.");
                 if (string.IsNullOrWhiteSpace(input = ReadLine())) break;
+            }
+
+            if (input == "backa")
+            {
+                choices.Push(finishedChoices.Pop());
+                if (yatzyDice.RollCount != 2 || yatzyDice.SavedDice.Count == 0)
+                {
+                    choices.Push(finishedChoices.Pop());
+                }
+                canceled = true;
+                break;
             }
 
             validation = int.TryParse(input, out int column);
