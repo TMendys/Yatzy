@@ -7,8 +7,8 @@ namespace YatzyConsole;
 public class Game
 {
     private readonly List<Player> players;
-    private Stack<Action> choices;
-    private Stack<Action> finishedChoices;
+    private readonly Stack<Action> choices;
+    private readonly Stack<Action> finishedChoices;
     private bool canceled = false;
 
     public Game(List<Player> players)
